@@ -5,9 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "child")
 data class Child(
-
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val id: Int,
-    val name: String,
-    val pass: String
+    val name: String
 )

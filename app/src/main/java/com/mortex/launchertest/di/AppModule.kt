@@ -8,9 +8,11 @@ import com.mortex.launchertest.BuildConfig
 import com.mortex.launchertest.local.AppDatabase
 //import com.mortex.launchertest.local.AppDatabase
 import com.mortex.launchertest.local.Constants
+import com.mortex.launchertest.local.LauncherDao
 //import com.mortex.mortext.local.MortextDao
 import com.mortex.launchertest.local.SessionManager
 import com.mortex.launchertest.network.URLConstants.BASE_URL
+import com.mortex.launchertest.ui.MainRepository
 import com.mortex.launchertest.ui.login.LoginRepository
 import com.mortex.launchertest.ui.login.remote.LoginRemoteDataSource
 import com.mortex.launchertest.ui.login.remote.LoginService
@@ -75,7 +77,7 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideMortextDao(db: AppDatabase) = db.launcherDao()
+    fun provideLauncherDao(db: AppDatabase) = db.launcherDao()
 
 
     @Provides
@@ -91,10 +93,16 @@ object AppModule {
     @Provides
     fun provideLoginRepository(
         remoteDataSource: LoginRemoteDataSource,
-        sessionManager: SessionManager
+        sessionManager: SessionManager,
+        launcherDao: LauncherDao
     ) =
-        LoginRepository(remoteDataSource, sessionManager)
+        LoginRepository(remoteDataSource, sessionManager, launcherDao)
 
-
+    @Singleton
+    @Provides
+    fun provideMainRepository(
+        launcherDao: LauncherDao
+    ) =
+        MainRepository(launcherDao)
 
 }

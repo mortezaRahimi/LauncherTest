@@ -5,24 +5,37 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.mortex.launchertest.R
 import com.mortex.launchertest.base.BaseFragment
 import com.mortex.launchertest.common.Utils.showToast
 import com.mortex.launchertest.databinding.FragmentLoginBinding
+import com.mortex.launchertest.local.Child
 import com.mortex.launchertest.network.Resource
+import com.mortex.launchertest.ui.app_list.AppInfoAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import java.util.*
+import kotlin.collections.ArrayList
+
+const val IS_PARENT = "IS_PARENT"
 
 @AndroidEntryPoint
 class LoginFragment : BaseFragment() {
-
+    private  var children: ArrayList<Child> = ArrayList()
     private lateinit var binding: FragmentLoginBinding
     private val viewModel: LoginViewModel by viewModels()
+    private lateinit var adapter: ChildAdapter
     val show: Float = 1.0F
     val hide: Float = 0.0F
+    private var isParent: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +61,8 @@ class LoginFragment : BaseFragment() {
                 login(binding.passEt.text.toString(), binding.userNameEt.text.toString())
             }
         }
+
+        getSndShowChildren()
     }
 
     private fun login(pass: String, userName: String) {
@@ -62,7 +77,8 @@ class LoginFragment : BaseFragment() {
                 Resource.Status.SUCCESS -> {
                     binding.loading.alpha = hide
                     viewModel.setToken(it.data!!.token)
-                    goToAppListView()
+                    isParent = true
+                    goToAppListView(isParent)
                 }
 
                 Resource.Status.LOADING -> {
@@ -72,9 +88,27 @@ class LoginFragment : BaseFragment() {
         })
     }
 
-    private fun goToAppListView() {
+    private fun goToAppListView(isParent: Boolean) {
         findNavController()
-            .navigate(R.id.action_loginFragment_to_appListFragment)
+            .navigate(
+                R.id.action_loginFragment_to_appListFragment,
+                bundleOf(IS_PARENT to isParent)
+            )
+    }
+
+    private fun getSndShowChildren() {
+        this.lifecycleScope.launch {
+            viewModel.userDetails.collect {
+                children.clear()
+                children.addAll(it)
+                adapter = ChildAdapter()
+                binding.childrenRv.layoutManager = LinearLayoutManager(context)
+                binding.childrenRv.adapter = adapter
+                adapter.setItems(children)
+            }
+
+        }
+
     }
 
 
