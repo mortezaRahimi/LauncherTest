@@ -21,7 +21,8 @@ class LoginFragment : BaseFragment() {
 
     private lateinit var binding: FragmentLoginBinding
     private val viewModel: LoginViewModel by viewModels()
-
+    val show: Float = 1.0F
+    val hide: Float = 0.0F
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,8 +40,11 @@ class LoginFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.btnLoginParent.alpha = show
+
         binding.btnLoginParent.setOnClickListener {
             if (binding.passEt.text!!.isNotEmpty() && binding.userNameEt.text!!.isNotEmpty()) {
+                binding.btnLoginParent.alpha = hide
                 login(binding.passEt.text.toString(), binding.userNameEt.text.toString())
             }
         }
@@ -50,18 +54,19 @@ class LoginFragment : BaseFragment() {
         viewModel.login(userName, pass).observe(viewLifecycleOwner, Observer {
             when (it.status) {
                 Resource.Status.ERROR -> {
-                    binding.loading.alpha = 0.0f
+                    binding.loading.alpha = hide
+                    binding.btnLoginParent.alpha = show
                     showToast(it.message.toString())
                 }
 
                 Resource.Status.SUCCESS -> {
-                    binding.loading.alpha = 0.0f
+                    binding.loading.alpha = hide
                     viewModel.setToken(it.data!!.token)
                     goToAppListView()
                 }
 
                 Resource.Status.LOADING -> {
-                    binding.loading.alpha = 1.0f
+                    binding.loading.alpha = show
                 }
             }
         })
