@@ -31,6 +31,12 @@
                 android:text="App Package Name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+
+            <CheckBox
+                android:id="@+id/checkbox"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:visibility="gone"/>
         </LinearLayout>
     </LinearLayout>
 

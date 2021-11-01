@@ -18,6 +18,15 @@
         android:id="@+id/appListFragment"
         android:name="com.mortex.launchertest.ui.app_list.AppListFragment"
         android:label="fragment_app_list"
-        tools:layout="@layout/fragment_app_list" />
+        tools:layout="@layout/fragment_app_list" >
+        <action
+            android:id="@+id/action_appListFragment_to_addChildFragment"
+            app:destination="@id/addChildFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addChildFragment"
+        android:name="com.mortex.launchertest.ui.app_list.add_child.AddChildFragment"
+        android:label="fragment_add_child"
+        tools:layout="@layout/fragment_add_child" />
 
 </navigation>

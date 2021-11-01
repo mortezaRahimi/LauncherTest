@@ -8,6 +8,10 @@ import com.mortex.launchertest.ui.app_list.AppInfo
 import com.mortex.launchertest.local.Child
 import com.mortex.launchertest.ui.app_list.AppInfoToShow
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class MainViewModel @ViewModelInject constructor(
@@ -15,7 +19,6 @@ class MainViewModel @ViewModelInject constructor(
 ) : ViewModel() {
 
     var parentAppList: MutableLiveData<List<AppInfoToShow>> = MutableLiveData()
-    var childAppList: MutableLiveData<List<AppInfoToShow>> = MutableLiveData()
     private val _response = MutableLiveData<Long>()
 
     fun addUser(child: Child) {
@@ -25,8 +28,30 @@ class MainViewModel @ViewModelInject constructor(
     }
 
     fun saveAllApps(list: List<AppInfo>) {
-        mainRepository.saveAllAppsToDb(list)
+        viewModelScope.launch(Dispatchers.IO) {
+            mainRepository.saveAllAppsToDb(list)
+        }
     }
+
+    private val _childAppList = MutableStateFlow<List<AppInfo>>(emptyList())
+    val childAppList: StateFlow<List<AppInfo>> = _childAppList
+
+
+    private fun doGetBlockedApps() {
+        viewModelScope.launch(Dispatchers.IO) {
+            mainRepository.getApps(false)
+                .catch { e ->
+                }
+                .collect {
+                    _childAppList.value = it
+                }
+        }
+    }
+
+    init {
+        doGetBlockedApps()
+    }
+
 
     fun getAppsFrmDb(blocked: Boolean) {
         mainRepository.getFilteredAppsFromDb(blocked)

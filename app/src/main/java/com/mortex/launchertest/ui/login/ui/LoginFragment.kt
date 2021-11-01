@@ -28,8 +28,8 @@ import kotlin.collections.ArrayList
 const val IS_PARENT = "IS_PARENT"
 
 @AndroidEntryPoint
-class LoginFragment : BaseFragment() {
-    private  var children: ArrayList<Child> = ArrayList()
+class LoginFragment : BaseFragment(), ChildListener {
+    private var children: ArrayList<Child> = ArrayList()
     private lateinit var binding: FragmentLoginBinding
     private val viewModel: LoginViewModel by viewModels()
     private lateinit var adapter: ChildAdapter
@@ -101,14 +101,17 @@ class LoginFragment : BaseFragment() {
             viewModel.userDetails.collect {
                 children.clear()
                 children.addAll(it)
-                adapter = ChildAdapter()
+                adapter = ChildAdapter(this@LoginFragment)
                 binding.childrenRv.layoutManager = LinearLayoutManager(context)
                 binding.childrenRv.adapter = adapter
                 adapter.setItems(children)
             }
 
         }
+    }
 
+    override fun childTapped() {
+       goToAppListView(false)
     }
 
 

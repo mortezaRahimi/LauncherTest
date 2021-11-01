@@ -24,8 +24,6 @@ class LoginViewModel @ViewModelInject constructor(
         loginRepository.setToken(token)
     }
 
-    val childList = loginRepository.getChildrenFromDb()
-
     private val _userDetails = MutableStateFlow<List<Child>>(emptyList())
     val userDetails: StateFlow<List<Child>> = _userDetails
 
