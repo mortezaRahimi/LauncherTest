@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">LauncherTest</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="user_name">User Name</string>
+    <string name="password">Password</string>
+    <string name="login_by_parent">Login by Parent</string>
 </resources>

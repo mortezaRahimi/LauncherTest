@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.mortex.launchertest.ui.login.ui.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_appListFragment"
+            app:destination="@id/appListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/appListFragment"
+        android:name="com.mortex.launchertest.ui.app_list.AppListFragment"
+        android:label="fragment_app_list"
+        tools:layout="@layout/fragment_app_list" />
+
+</navigation>

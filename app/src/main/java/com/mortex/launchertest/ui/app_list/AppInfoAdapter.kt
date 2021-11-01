@@ -1,17 +1,14 @@
-package com.mortex.launchertest
+package com.mortex.launchertest.ui.app_list
 
 import android.content.Intent
-import android.os.AsyncTask
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.mortex.launchertest.AppInfo
 import com.mortex.launchertest.databinding.AppItemBinding
 
-class InterestsAdapter(private val activity: MainActivity) :
+class AppInfoAdapter() :
     RecyclerView.Adapter<InterestsViewHolder>() {
-
-
     private val items = ArrayList<AppInfo>()
 
     fun setItems(items: List<AppInfo>) {
