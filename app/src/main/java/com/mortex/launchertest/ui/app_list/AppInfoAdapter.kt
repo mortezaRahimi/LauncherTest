@@ -9,9 +9,9 @@ import com.mortex.launchertest.databinding.AppItemBinding
 
 class AppInfoAdapter(private val appListener: AppListener, private val isForParent: Boolean) :
     RecyclerView.Adapter<AppInfoViewHolder>() {
-    private val items = ArrayList<AppInfoToShow>()
+    private val items = ArrayList<AppInfo>()
 
-    fun setItems(items: List<AppInfoToShow>) {
+    fun setItems(items: List<AppInfo>) {
         this.items.clear()
         this.items.addAll(items)
         notifyDataSetChanged()
@@ -36,34 +36,20 @@ class AppInfoViewHolder(
     private val isForParent: Boolean
 ) : RecyclerView.ViewHolder(itemBinding.root) {
 
-    private lateinit var appInfo: AppInfoToShow
+    private lateinit var appInfo: AppInfo
 
-    fun bind(item: AppInfoToShow) {
+    fun bind(item: AppInfo) {
         this.appInfo = item
         itemBinding.listAppName.text = item.label
         itemBinding.appPackage.text = item.packageName
-        itemBinding.appIcon.setImageDrawable(item.icon)
-        if (isForParent) {
-            itemBinding.checkbox.visibility = View.VISIBLE
-        }
+//        itemBinding.appIcon.setImageDrawable(item.icon)
+
 
         itemBinding.root.setOnClickListener {
-            if (isForParent) {
-                if (!itemBinding.checkbox.isChecked) {
-                    itemBinding.checkbox.isChecked = true
-                    appListener.appCheckedForBlockList(item)
-                } else {
-                    itemBinding.checkbox.isChecked = false
-                    appListener.removeFromBlockList(item)
-                }
-
-            } else {
-                val launchIntent: Intent = itemBinding.listAppName.context.packageManager
-                    .getLaunchIntentForPackage(item.packageName.toString())!!
-                itemBinding.listAppName.context.startActivity(launchIntent)
+                appListener.appTapped(item)
             }
+
         }
-    }
 
 
 }

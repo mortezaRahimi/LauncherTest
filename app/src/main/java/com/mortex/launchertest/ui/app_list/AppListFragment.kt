@@ -1,5 +1,6 @@
 package com.mortex.launchertest.ui.app_list
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -26,7 +27,7 @@ class AppListFragment : Fragment(), AppListener {
 
     private lateinit var adapter: AppInfoAdapter
     private lateinit var binding: FragmentAppListBinding
-    var appsList: ArrayList<AppInfoToShow> = ArrayList()
+    var appsList: ArrayList<AppInfo> = ArrayList()
 
     private var isForParent: Boolean = false
     private lateinit var mainViewModel: MainViewModel
@@ -47,30 +48,33 @@ class AppListFragment : Fragment(), AppListener {
         super.onViewCreated(view, savedInstanceState)
         mainViewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel::class.java)
 
-        if (arguments != null && !arguments?.getBoolean(IS_PARENT)!!) {
-            binding.btnAddChild.visibility = View.GONE
-            if (mainViewModel.childAppList.value != null) {
-                for (i in mainViewModel.childAppList.value) {
-                    appsList.add(
-                        AppInfoToShow(
-                            i.label,
-                            i.packageName,
-                            i.blocked,
-                            ContextCompat.getDrawable(
-                                requireContext(),
-                                R.drawable.ic_launcher_background
-                            )!!
-                        )
-                    )
-                }
-            }
-        } else {
-            isForParent = true
-            appsList.clear()
-            appsList.addAll(mainViewModel.parentAppList.value!!)
-        }
+        mainViewModel.doGetUnblockedApps().observe(viewLifecycleOwner, Observer {
+            mainViewModel.childAppList.value = it
 
-        setupRecyclerView()
+            if (arguments != null && !arguments?.getBoolean(IS_PARENT)!!) {
+                binding.btnAddChild.visibility = View.GONE
+                if (it != null) {
+                    for (i in mainViewModel.childAppList.value!!) {
+                        appsList.add(
+                            AppInfo(
+                                i.label,
+                                i.packageName,
+                                i.blocked,
+//                            ContextCompat.getDrawable(
+//                                requireContext(),
+//                                R.drawable.ic_launcher_background
+//                            )!!
+                            )
+                        )
+                    }
+                }
+            } else {
+                isForParent = true
+                appsList.clear()
+                appsList.addAll(mainViewModel.parentAppList.value!!)
+            }
+            setupRecyclerView()
+        })
 
         binding.btnAddChild.setOnClickListener {
             findNavController()
@@ -88,11 +92,10 @@ class AppListFragment : Fragment(), AppListener {
     }
 
 
-    override fun appCheckedForBlockList(app:AppInfoToShow) {
-
-    }
-
-    override fun removeFromBlockList(app: AppInfoToShow) {
+    override fun appTapped(app: AppInfo) {
+        val launchIntent: Intent = requireActivity().packageManager
+            .getLaunchIntentForPackage(app.packageName)!!
+        requireActivity().startActivity(launchIntent)
 
     }
 

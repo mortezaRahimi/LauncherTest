@@ -5,8 +5,11 @@ import androidx.lifecycle.liveData
 import com.mortex.launchertest.ui.app_list.AppInfo
 import com.mortex.launchertest.local.Child
 import com.mortex.launchertest.local.LauncherDao
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MainRepository @Inject constructor(
@@ -23,28 +26,26 @@ class MainRepository @Inject constructor(
     }
 
 
-    suspend fun saveAllAppsToDb(apps: List<AppInfo>) {
-        return launcherDao.insertAllApps(apps)
-    }
-//    fun saveAllAppsToDb(apps: List<AppInfo>): LiveData<Void> = liveData(Dispatchers.IO) {
-//        launcherDao.insertAllApps(apps)
-//    }
-
-//    fun getAllAppsFromDb(): LiveData<List<AppInfo>> = liveData(Dispatchers.IO) {
-//        launcherDao.getAllApps()
-//    }
-
-    fun getApps(blocked: Boolean): Flow<List<AppInfo>> {
+    fun getUnblockedApps(blocked: Boolean): LiveData<List<AppInfo>> {
         return launcherDao.getAllBlockedApps(blocked)
     }
 
-    fun getFilteredAppsFromDb(blocked: Boolean): LiveData<List<AppInfo>> =
-        liveData(Dispatchers.IO) {
-            launcherDao.getAllBlockedApps(blocked)
-        }
+//    fun getAllApps(): Flow<List<AppInfo>> {
+//        return launcherDao.getAllApps()
+//    }
 
-    fun updateApp(app: AppInfo): LiveData<Void> = liveData(Dispatchers.IO) {
-        launcherDao.insertApp(app)
+//    suspend fun saveAllAppsToDb(apps: List<AppInfo>) {
+//        return launcherDao.insertAllApps(apps)
+//    }
+
+    fun saveAllAppsToDb(list: List<AppInfo>) {
+        CoroutineScope(IO).launch {
+           launcherDao.insertAllApps(list)
+        }
+    }
+
+    fun getAllApps(): LiveData<List<AppInfo>> {
+       return  launcherDao.getAllApps()
     }
 
 }

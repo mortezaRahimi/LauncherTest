@@ -1,6 +1,7 @@
 package com.mortex.launchertest.ui
 
 import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,7 +19,7 @@ class MainViewModel @ViewModelInject constructor(
     private val mainRepository: MainRepository
 ) : ViewModel() {
 
-    var parentAppList: MutableLiveData<List<AppInfoToShow>> = MutableLiveData()
+    var parentAppList: MutableLiveData<List<AppInfo>> = MutableLiveData()
     private val _response = MutableLiveData<Long>()
 
     fun addUser(child: Child) {
@@ -28,37 +29,26 @@ class MainViewModel @ViewModelInject constructor(
     }
 
     fun saveAllApps(list: List<AppInfo>) {
+        parentAppList.value = list
         viewModelScope.launch(Dispatchers.IO) {
             mainRepository.saveAllAppsToDb(list)
         }
     }
 
-    private val _childAppList = MutableStateFlow<List<AppInfo>>(emptyList())
-    val childAppList: StateFlow<List<AppInfo>> = _childAppList
+     var childAppList = MutableLiveData<List<AppInfo>>(emptyList())
 
+//    private val _allApps = MutableLiveData<List<AppInfo>>(emptyList())
+//    var allApps: LiveData<List<AppInfo>> = _allApps
 
-    private fun doGetBlockedApps() {
-        viewModelScope.launch(Dispatchers.IO) {
-            mainRepository.getApps(false)
-                .catch { e ->
-                }
-                .collect {
-                    _childAppList.value = it
-                }
-        }
-    }
-
-    init {
-        doGetBlockedApps()
+    fun doGetUnblockedApps():LiveData<List<AppInfo>> {
+        return mainRepository.getUnblockedApps(false)
     }
 
 
-    fun getAppsFrmDb(blocked: Boolean) {
-        mainRepository.getFilteredAppsFromDb(blocked)
+
+    fun getAllApps(): LiveData<List<AppInfo>> {
+        return mainRepository.getAllApps()
     }
 
-    fun updateApp(appInfo: AppInfo) {
-        mainRepository.updateApp(appInfo)
-    }
 
 }

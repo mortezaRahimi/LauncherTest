@@ -21,11 +21,11 @@ interface LauncherDao {
     suspend fun insertChild(child: Child): Long
 
 
-//    @Query("SELECT * FROM app_info")
-//    fun getAllApps(): LiveData<List<AppInfo>>
+    @Query("SELECT * FROM app_info")
+    fun getAllApps(): LiveData<List<AppInfo>>
 
     @Query("SELECT * FROM app_info WHERE blocked = :blockedItem ")
-    fun getAllBlockedApps(blockedItem: Boolean): Flow<List<AppInfo>>
+    fun getAllBlockedApps(blockedItem: Boolean): LiveData<List<AppInfo>>
 
 //    @Query("SELECT * FROM app_info WHERE Id = :Id")
 //    fun getApp(Id: Int): LiveData<Child>

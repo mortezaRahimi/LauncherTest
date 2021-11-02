@@ -65,20 +65,19 @@ class AddChildFragment : Fragment(), AppListener {
                 )
             )
             for (i in appsToBeBlocked) {
-                for (j in mainViewModel.childAppList.value) {
+                for (j in mainViewModel.parentAppList.value!!) {
                     if (i.label == j.label) {
                         j.blocked = true
                     }
                 }
             }
 
-            mainViewModel.saveAllApps(mainViewModel.childAppList.value)
+            mainViewModel.saveAllApps(mainViewModel.parentAppList.value!!)
             findNavController().navigateUp()
             showToast("New Child Added")
 
         }
     }
-
 
     private fun setupRecyclerView() {
         adapter = AppInfoAdapter(this@AddChildFragment, true)
@@ -87,21 +86,12 @@ class AddChildFragment : Fragment(), AppListener {
         adapter.setItems(mainViewModel.parentAppList.value!!)
     }
 
-    override fun appCheckedForBlockList(app: AppInfoToShow) {
+    override fun appTapped(app: AppInfo) {
         app.blocked = true
-        appsToBeBlocked.add(AppInfo(app.label.toString(), app.packageName.toString(), app.blocked))
+        appsToBeBlocked.add(AppInfo(app.label, app.packageName, app.blocked))
+        showToast(app.label + " checked to add to block list after adding user" )
     }
 
-    override fun removeFromBlockList(app: AppInfoToShow) {
-        app.blocked = false
-        appsToBeBlocked.remove(
-            AppInfo(
-                app.label.toString(),
-                app.packageName.toString(),
-                app.blocked
-            )
-        )
-    }
 
 
 }
