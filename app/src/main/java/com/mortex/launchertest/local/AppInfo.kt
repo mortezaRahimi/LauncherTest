@@ -1,4 +1,4 @@
-package com.mortex.launchertest.ui.app_list
+package com.mortex.launchertest.local
 
 import android.graphics.drawable.Drawable
 import androidx.room.Entity
@@ -9,5 +9,6 @@ data class AppInfo(
     var label: String,
     @PrimaryKey
     var packageName: String,
-    var blocked: Boolean
+    var blocked: Boolean,
+    var icon:String
 )

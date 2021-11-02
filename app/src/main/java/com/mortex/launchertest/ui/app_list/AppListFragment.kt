@@ -6,21 +6,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mortex.launchertest.R
-import com.mortex.launchertest.common.Utils.showToast
 import com.mortex.launchertest.databinding.FragmentAppListBinding
-import com.mortex.launchertest.local.Child
+import com.mortex.launchertest.local.AppInfo
 import com.mortex.launchertest.ui.MainViewModel
-import com.mortex.launchertest.ui.login.ui.ChildListener
 import com.mortex.launchertest.ui.login.ui.IS_PARENT
 import dagger.hilt.android.AndroidEntryPoint
-import kotlin.random.Random
 
 @AndroidEntryPoint
 class AppListFragment : Fragment(), AppListener {
@@ -52,7 +47,6 @@ class AppListFragment : Fragment(), AppListener {
             mainViewModel.childAppList.value = it
 
             if (arguments != null && !arguments?.getBoolean(IS_PARENT)!!) {
-                binding.btnAddChild.visibility = View.GONE
                 if (it != null) {
                     for (i in mainViewModel.childAppList.value!!) {
                         appsList.add(
@@ -60,15 +54,13 @@ class AppListFragment : Fragment(), AppListener {
                                 i.label,
                                 i.packageName,
                                 i.blocked,
-//                            ContextCompat.getDrawable(
-//                                requireContext(),
-//                                R.drawable.ic_launcher_background
-//                            )!!
+                                i.icon
                             )
                         )
                     }
                 }
             } else {
+                binding.btnAddChild.visibility = View.VISIBLE
                 isForParent = true
                 appsList.clear()
                 appsList.addAll(mainViewModel.parentAppList.value!!)
@@ -85,12 +77,11 @@ class AppListFragment : Fragment(), AppListener {
     }
 
     private fun setupRecyclerView() {
-        adapter = AppInfoAdapter(this@AppListFragment, isForParent)
+        adapter = AppInfoAdapter(this@AppListFragment)
         binding.installedAppList.layoutManager = LinearLayoutManager(context)
         binding.installedAppList.adapter = adapter
         adapter.setItems(appsList)
     }
-
 
     override fun appTapped(app: AppInfo) {
         val launchIntent: Intent = requireActivity().packageManager

@@ -1,13 +1,12 @@
 package com.mortex.launchertest.ui.app_list
 
-import android.content.Intent
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mortex.launchertest.databinding.AppItemBinding
+import com.mortex.launchertest.local.AppInfo
 
-class AppInfoAdapter(private val appListener: AppListener, private val isForParent: Boolean) :
+class AppInfoAdapter(private val appListener: AppListener) :
     RecyclerView.Adapter<AppInfoViewHolder>() {
     private val items = ArrayList<AppInfo>()
 
@@ -20,7 +19,7 @@ class AppInfoAdapter(private val appListener: AppListener, private val isForPare
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppInfoViewHolder {
         val binding: AppItemBinding =
             AppItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return AppInfoViewHolder(binding, appListener, isForParent)
+        return AppInfoViewHolder(binding, appListener)
     }
 
     override fun getItemCount(): Int = items.size
@@ -32,8 +31,7 @@ class AppInfoAdapter(private val appListener: AppListener, private val isForPare
 
 class AppInfoViewHolder(
     private val itemBinding: AppItemBinding,
-    private val appListener: AppListener,
-    private val isForParent: Boolean
+    private val appListener: AppListener
 ) : RecyclerView.ViewHolder(itemBinding.root) {
 
     private lateinit var appInfo: AppInfo
@@ -42,14 +40,14 @@ class AppInfoViewHolder(
         this.appInfo = item
         itemBinding.listAppName.text = item.label
         itemBinding.appPackage.text = item.packageName
-//        itemBinding.appIcon.setImageDrawable(item.icon)
+//        itemBinding.appIcon.setImageDrawable()
 
 
         itemBinding.root.setOnClickListener {
-                appListener.appTapped(item)
-            }
-
+            appListener.appTapped(item)
         }
+
+    }
 
 
 }

@@ -4,15 +4,10 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.mortex.launchertest.databinding.ActivityMainBinding
 import com.mortex.launchertest.loadApps
-import com.mortex.launchertest.ui.app_list.AppInfo
-import com.mortex.launchertest.ui.login.ui.ChildAdapter
+import com.mortex.launchertest.local.AppInfo
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -27,16 +22,16 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-
         viewModel.getAllApps().observe(this, Observer {
             if (it.isEmpty()) {
                 viewModel.parentAppList.value = loadApps(packageManager).apply {
                     for (i in this) {
                         toSaveList.add(
                             AppInfo(
-                                i.label.toString(),
-                                i.packageName.toString(),
-                                false
+                                i.label,
+                                i.packageName,
+                                false,
+                                i.icon
                             )
                         )
                     }

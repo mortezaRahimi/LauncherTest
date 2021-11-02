@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.mortex.launchertest.ui.app_list.AppInfo
 
 @Database(
     entities = [Child::class, AppInfo::class],

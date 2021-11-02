@@ -2,8 +2,11 @@ package com.mortex.launchertest
 
 import android.content.Intent
 import android.content.pm.PackageManager
-import com.mortex.launchertest.ui.app_list.AppInfo
-import com.mortex.launchertest.ui.app_list.AppInfoToShow
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.liveData
+import com.mortex.launchertest.network.Resource
+import com.mortex.launchertest.local.AppInfo
+import kotlinx.coroutines.Dispatchers
 
 val appsList: MutableList<AppInfo> = ArrayList()
 
@@ -18,8 +21,9 @@ fun loadApps(packageManager: PackageManager): List<AppInfo> {
             ri.loadLabel(packageManager).toString(),
             ri.activityInfo.packageName,
             false,
-            )
-//        ri.activityInfo.loadIcon(packageManager
+            (ri.activityInfo.loadIcon(packageManager)).toString()
+        )
+
         loadList.add(app)
     }
     loadList.sortBy { it.label.toString() }
@@ -28,4 +32,21 @@ fun loadApps(packageManager: PackageManager): List<AppInfo> {
     appsList.addAll(loadList)
     return appsList
 }
+
+fun <T> performGetOperation(
+    networkCall: suspend () -> Resource<T>
+): LiveData<Resource<T>> =
+    liveData(Dispatchers.IO) {
+        emit(Resource.loading())
+
+        val responseStatus = networkCall.invoke()
+        if (responseStatus.status == Resource.Status.SUCCESS) {
+
+            emit(Resource.success(responseStatus.data) as Resource<T>)
+
+        } else if (responseStatus.status == Resource.Status.ERROR) {
+            emit(Resource.error(responseStatus.message!!))
+
+        }
+    }
 

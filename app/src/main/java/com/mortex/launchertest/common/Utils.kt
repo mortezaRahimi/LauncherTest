@@ -37,50 +37,9 @@ import kotlinx.coroutines.Dispatchers
 
 object Utils {
 
-    fun isEmailValid(email: CharSequence?): Boolean {
-        return Patterns.EMAIL_ADDRESS.matcher(email!!).matches()
-    }
-
-    fun Fragment.hideKeyboard() {
-        view?.let { activity?.hideKeyboard(it) }
-    }
-
     fun Fragment.showToast(msg: String) {
-        Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
+        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
     }
-
-    fun Activity.hideKeyboard() {
-        hideKeyboard(currentFocus ?: View(this))
-    }
-
-    private fun Context.hideKeyboard(view: View) {
-        val inputMethodManager =
-            getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
-    }
-
-
-    fun <T> performGetOperation(
-        networkCall: suspend () -> Resource<T>
-    ): LiveData<Resource<T>> =
-        liveData(Dispatchers.IO) {
-            emit(Resource.loading())
-
-//        val source = databaseQuery.invoke().map { Resource.success(it) }
-//        emitSource(source)
-
-            val responseStatus = networkCall.invoke()
-            if (responseStatus.status == Resource.Status.SUCCESS) {
-
-                emit(Resource.success(responseStatus.data) as Resource<T>)
-
-
-            } else if (responseStatus.status == Resource.Status.ERROR) {
-                emit(Resource.error(responseStatus.message!!))
-//            emitSource(source)
-            }
-        }
-
 
 }
 

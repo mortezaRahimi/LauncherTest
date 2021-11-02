@@ -8,4 +8,9 @@
     <string name="add_child">ADD CHILD</string>
     <string name="list_of_all_apps">List of all apps</string>
     <string name="enter_child_name">Enter Child name</string>
+    <string name="select_below_apps_to_add_in_block_list">1-Select below apps to add in block list \n 2- Enter Child name \n 3- Tap Add Button</string>
+    <string name="go_to_add_child_view">Go to Add Child View</string>
+    <string name="_1_select_below_apps_to_add_in_block_list_n_2_enter_child_name_n_3_tap_on_add_button">1-Select below apps to add in block list \n 2- Enter Child name \n 3- Tap on Add Button</string>
+    <string name="child_added">New Child Added</string>
+    <string name="added_to_block_list">\" checked to add to block list after adding user\"</string>
 </resources>

@@ -5,14 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mortex.launchertest.ui.app_list.AppInfo
+import com.mortex.launchertest.local.AppInfo
 import com.mortex.launchertest.local.Child
-import com.mortex.launchertest.ui.app_list.AppInfoToShow
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class MainViewModel @ViewModelInject constructor(
@@ -35,15 +30,11 @@ class MainViewModel @ViewModelInject constructor(
         }
     }
 
-     var childAppList = MutableLiveData<List<AppInfo>>(emptyList())
+    var childAppList = MutableLiveData<List<AppInfo>>(emptyList())
 
-//    private val _allApps = MutableLiveData<List<AppInfo>>(emptyList())
-//    var allApps: LiveData<List<AppInfo>> = _allApps
-
-    fun doGetUnblockedApps():LiveData<List<AppInfo>> {
+    fun doGetUnblockedApps(): LiveData<List<AppInfo>> {
         return mainRepository.getUnblockedApps(false)
     }
-
 
 
     fun getAllApps(): LiveData<List<AppInfo>> {

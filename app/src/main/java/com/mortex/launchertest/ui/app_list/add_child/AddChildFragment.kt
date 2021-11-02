@@ -11,12 +11,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mortex.launchertest.R
 import com.mortex.launchertest.common.Utils.showToast
 import com.mortex.launchertest.databinding.FragmentAddChildBinding
-import com.mortex.launchertest.databinding.FragmentAppListBinding
 import com.mortex.launchertest.local.Child
 import com.mortex.launchertest.ui.MainViewModel
-import com.mortex.launchertest.ui.app_list.AppInfo
+import com.mortex.launchertest.local.AppInfo
 import com.mortex.launchertest.ui.app_list.AppInfoAdapter
-import com.mortex.launchertest.ui.app_list.AppInfoToShow
 import com.mortex.launchertest.ui.app_list.AppListener
 import kotlin.random.Random
 
@@ -73,14 +71,17 @@ class AddChildFragment : Fragment(), AppListener {
             }
 
             mainViewModel.saveAllApps(mainViewModel.parentAppList.value!!)
-            findNavController().navigateUp()
-            showToast("New Child Added")
+            findNavController()
+                .navigate(
+                    R.id.action_addChildFragment_to_loginFragment
+                )
+            showToast(getString(R.string.child_added))
 
         }
     }
 
     private fun setupRecyclerView() {
-        adapter = AppInfoAdapter(this@AddChildFragment, true)
+        adapter = AppInfoAdapter(this@AddChildFragment)
         binding.installedAppList.layoutManager = LinearLayoutManager(context)
         binding.installedAppList.adapter = adapter
         adapter.setItems(mainViewModel.parentAppList.value!!)
@@ -88,8 +89,8 @@ class AddChildFragment : Fragment(), AppListener {
 
     override fun appTapped(app: AppInfo) {
         app.blocked = true
-        appsToBeBlocked.add(AppInfo(app.label, app.packageName, app.blocked))
-        showToast(app.label + " checked to add to block list after adding user" )
+        appsToBeBlocked.add(AppInfo(app.label, app.packageName, app.blocked,""))
+        showToast(app.label + getString(R.string.added_to_block_list) )
     }
 
 
