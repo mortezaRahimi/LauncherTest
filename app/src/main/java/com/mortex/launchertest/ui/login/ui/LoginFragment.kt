@@ -58,7 +58,8 @@ class LoginFragment : BaseFragment(), ChildListener {
         binding.btnLoginParent.setOnClickListener {
             if (binding.passEt.text!!.isNotEmpty() && binding.userNameEt.text!!.isNotEmpty()) {
                 binding.btnLoginParent.alpha = hide
-                login(binding.passEt.text.toString(), binding.userNameEt.text.toString())
+//                login(binding.passEt.text.toString(), binding.userNameEt.text.toString())
+                goToAppListView(true)
             }
         }
 
@@ -106,7 +107,6 @@ class LoginFragment : BaseFragment(), ChildListener {
                 binding.childrenRv.adapter = adapter
                 adapter.setItems(children)
             }
-
         }
     }
 
