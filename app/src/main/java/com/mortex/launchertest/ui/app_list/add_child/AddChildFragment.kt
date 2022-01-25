@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mortex.launchertest.R
-import com.mortex.launchertest.appsList
 import com.mortex.launchertest.common.Utils.showToast
 import com.mortex.launchertest.databinding.FragmentAddChildBinding
 import com.mortex.launchertest.local.Child
@@ -67,6 +66,10 @@ class AddChildFragment : Fragment(), AppListener {
                     binding.childNameValue.text.toString()
                 )
             )
+
+            for (item in mainViewModel.parentAppList.value!!) {
+                item.blocked = false
+            }
             for (i in appsToBeBlocked) {
                 for (j in mainViewModel.parentAppList.value!!) {
                     if (i.label == j.label) {
