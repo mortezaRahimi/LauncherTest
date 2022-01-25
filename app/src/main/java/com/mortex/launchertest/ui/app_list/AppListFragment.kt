@@ -1,6 +1,7 @@
 package com.mortex.launchertest.ui.app_list
 
 import android.content.Intent
+import android.graphics.drawable.ClipDrawable.HORIZONTAL
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.mortex.launchertest.R
 import com.mortex.launchertest.databinding.FragmentAppListBinding
 import com.mortex.launchertest.local.AppInfo
@@ -17,6 +19,7 @@ import com.mortex.launchertest.local.AppInfoWithIcon
 import com.mortex.launchertest.ui.MainViewModel
 import com.mortex.launchertest.ui.login.ui.IS_PARENT
 import dagger.hilt.android.AndroidEntryPoint
+import org.intellij.lang.annotations.JdkConstants
 
 @AndroidEntryPoint
 class AppListFragment : Fragment(), AppListener {
@@ -83,7 +86,7 @@ class AppListFragment : Fragment(), AppListener {
 
     private fun setupRecyclerView(list: List<AppInfo>) {
         adapter = AppInfoAdapter(this@AppListFragment)
-        binding.installedAppList.layoutManager = LinearLayoutManager(context)
+        binding.installedAppList.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
         binding.installedAppList.adapter = adapter
 
         var listToShow = arrayListOf<AppInfoWithIcon>()

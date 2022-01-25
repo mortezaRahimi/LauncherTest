@@ -14,4 +14,7 @@
     <string name="child_added">New User Added</string>
     <string name="added_to_block_list">\" checked to add to block list after adding user\"</string>
     <string name="back">Back</string>
+    <string name="sales_and_aftersales_applications">SALES and AFTERSALES APPLICATIONS</string>
+    <string name="useful_links">USEFUL LINKS</string>
+    <string name="others">OTHERS</string>
 </resources>
