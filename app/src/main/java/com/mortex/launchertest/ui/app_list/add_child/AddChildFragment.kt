@@ -28,7 +28,6 @@ class AddChildFragment : Fragment(), AppListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(
@@ -46,6 +45,10 @@ class AddChildFragment : Fragment(), AppListener {
 
         binding.btnAddChild.setOnClickListener {
             addUserAndSetApps()
+        }
+
+        binding.backBtn.setOnClickListener {
+            findNavController().navigateUp()
         }
 
         setupRecyclerView()
@@ -89,10 +92,9 @@ class AddChildFragment : Fragment(), AppListener {
 
     override fun appTapped(app: AppInfo) {
         app.blocked = true
-        appsToBeBlocked.add(AppInfo(app.label, app.packageName, app.blocked,""))
-        showToast(app.label + getString(R.string.added_to_block_list) )
+        appsToBeBlocked.add(AppInfo(app.label, app.packageName, app.blocked, ""))
+        showToast(app.label + getString(R.string.added_to_block_list))
     }
-
 
 
 }

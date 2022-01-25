@@ -74,6 +74,10 @@ class AppListFragment : Fragment(), AppListener {
                     R.id.action_appListFragment_to_addChildFragment
                 )
         }
+
+        binding.backBtn.setOnClickListener {
+          findNavController().navigateUp()
+        }
     }
 
     private fun setupRecyclerView() {

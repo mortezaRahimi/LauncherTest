@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        viewModel.getAllApps().observe(this, Observer {
+        viewModel.getAllApps().observe(this, {
             if (it.isEmpty()) {
                 viewModel.parentAppList.value = loadApps(packageManager).apply {
                     for (i in this) {
