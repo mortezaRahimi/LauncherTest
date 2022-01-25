@@ -9,11 +9,13 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mortex.launchertest.R
+import com.mortex.launchertest.appsList
 import com.mortex.launchertest.common.Utils.showToast
 import com.mortex.launchertest.databinding.FragmentAddChildBinding
 import com.mortex.launchertest.local.Child
 import com.mortex.launchertest.ui.MainViewModel
 import com.mortex.launchertest.local.AppInfo
+import com.mortex.launchertest.local.AppInfoWithIcon
 import com.mortex.launchertest.ui.app_list.AppInfoAdapter
 import com.mortex.launchertest.ui.app_list.AppListener
 import kotlin.random.Random
@@ -51,7 +53,7 @@ class AddChildFragment : Fragment(), AppListener {
             findNavController().navigateUp()
         }
 
-        setupRecyclerView()
+        setupRecyclerView(mainViewModel.parentAppList.value!!)
 
     }
 
@@ -83,14 +85,23 @@ class AddChildFragment : Fragment(), AppListener {
         }
     }
 
-    private fun setupRecyclerView() {
+    private fun setupRecyclerView(list: List<AppInfo>) {
         adapter = AppInfoAdapter(this@AddChildFragment)
         binding.installedAppList.layoutManager = LinearLayoutManager(context)
         binding.installedAppList.adapter = adapter
-        adapter.setItems(mainViewModel.parentAppList.value!!)
+
+        var listToShow = arrayListOf<AppInfoWithIcon>()
+
+        for (i in list)
+            for (j in mainViewModel.parentAppWithIconList.value!!) {
+                if (i.label == j.label) {
+                    listToShow.add(AppInfoWithIcon(j.label, j.packageName, j.blocked, j.icon))
+                }
+            }
+        adapter.setItems(listToShow)
     }
 
-    override fun appTapped(app: AppInfo) {
+    override fun appTapped(app: AppInfoWithIcon) {
         app.blocked = true
         appsToBeBlocked.add(AppInfo(app.label, app.packageName, app.blocked, ""))
         showToast(app.label + getString(R.string.added_to_block_list))

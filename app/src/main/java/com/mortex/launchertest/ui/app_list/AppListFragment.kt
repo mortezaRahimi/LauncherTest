@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mortex.launchertest.R
 import com.mortex.launchertest.databinding.FragmentAppListBinding
 import com.mortex.launchertest.local.AppInfo
+import com.mortex.launchertest.local.AppInfoWithIcon
 import com.mortex.launchertest.ui.MainViewModel
 import com.mortex.launchertest.ui.login.ui.IS_PARENT
 import dagger.hilt.android.AndroidEntryPoint
@@ -65,7 +66,7 @@ class AppListFragment : Fragment(), AppListener {
                 appsList.clear()
                 appsList.addAll(mainViewModel.parentAppList.value!!)
             }
-            setupRecyclerView()
+            setupRecyclerView(appsList)
         })
 
         binding.btnAddChild.setOnClickListener {
@@ -76,18 +77,27 @@ class AppListFragment : Fragment(), AppListener {
         }
 
         binding.backBtn.setOnClickListener {
-          findNavController().navigateUp()
+            findNavController().navigateUp()
         }
     }
 
-    private fun setupRecyclerView() {
+    private fun setupRecyclerView(list: List<AppInfo>) {
         adapter = AppInfoAdapter(this@AppListFragment)
         binding.installedAppList.layoutManager = LinearLayoutManager(context)
         binding.installedAppList.adapter = adapter
-        adapter.setItems(appsList)
+
+        var listToShow = arrayListOf<AppInfoWithIcon>()
+
+        for(i in list)
+            for(j in mainViewModel.parentAppWithIconList.value!!){
+                if(i.label == j.label){
+                    listToShow.add(AppInfoWithIcon(j.label,j.packageName,j.blocked,j.icon))
+                }
+            }
+        adapter.setItems(listToShow)
     }
 
-    override fun appTapped(app: AppInfo) {
+    override fun appTapped(app: AppInfoWithIcon) {
         val launchIntent: Intent = requireActivity().packageManager
             .getLaunchIntentForPackage(app.packageName)!!
         requireActivity().startActivity(launchIntent)

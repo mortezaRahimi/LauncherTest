@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 
-data class AppInfoToView(
+data class AppInfoWithIcon(
     var label: String,
     var packageName: String,
     var blocked: Boolean,

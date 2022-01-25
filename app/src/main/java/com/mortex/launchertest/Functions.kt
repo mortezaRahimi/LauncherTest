@@ -6,31 +6,28 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.mortex.launchertest.network.Resource
 import com.mortex.launchertest.local.AppInfo
+import com.mortex.launchertest.local.AppInfoWithIcon
 import kotlinx.coroutines.Dispatchers
 
-val appsList: MutableList<AppInfo> = ArrayList()
-
-fun loadApps(packageManager: PackageManager): List<AppInfo> {
-    val loadList = mutableListOf<AppInfo>()
+fun loadApps(packageManager: PackageManager): List<AppInfoWithIcon> {
+    val loadList = mutableListOf<AppInfoWithIcon>()
 
     val i = Intent(Intent.ACTION_MAIN, null)
     i.addCategory(Intent.CATEGORY_LAUNCHER)
     val allApps = packageManager.queryIntentActivities(i, 0)
     for (ri in allApps) {
-        val app = AppInfo(
+        val app = AppInfoWithIcon(
             ri.loadLabel(packageManager).toString(),
             ri.activityInfo.packageName,
             false,
-            (ri.activityInfo.loadIcon(packageManager)).toString()
+            ri.activityInfo.loadIcon(packageManager)
         )
 
         loadList.add(app)
     }
-    loadList.sortBy { it.label.toString() }
+    loadList.sortBy { it.label }
 
-    appsList.clear()
-    appsList.addAll(loadList)
-    return appsList
+    return loadList
 }
 
 fun <T> performGetOperation(

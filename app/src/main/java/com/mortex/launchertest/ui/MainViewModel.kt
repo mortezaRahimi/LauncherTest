@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mortex.launchertest.local.AppInfo
+import com.mortex.launchertest.local.AppInfoWithIcon
 import com.mortex.launchertest.local.Child
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,6 +16,9 @@ class MainViewModel @ViewModelInject constructor(
 ) : ViewModel() {
 
     var parentAppList: MutableLiveData<List<AppInfo>> = MutableLiveData()
+    var parentAppWithIconList: MutableLiveData<List<AppInfoWithIcon>> = MutableLiveData()
+
+
     private val _response = MutableLiveData<Long>()
 
     fun addUser(child: Child) {
@@ -24,6 +28,7 @@ class MainViewModel @ViewModelInject constructor(
     }
 
     fun saveAllApps(list: List<AppInfo>) {
+
         parentAppList.value = list
         viewModelScope.launch(Dispatchers.IO) {
             mainRepository.saveAllAppsToDb(list)
