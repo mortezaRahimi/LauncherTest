@@ -20,7 +20,9 @@ fun loadApps(packageManager: PackageManager): List<AppInfoWithIcon> {
             ri.loadLabel(packageManager).toString(),
             ri.activityInfo.packageName,
             false,
-            ri.activityInfo.loadIcon(packageManager)
+            ri.activityInfo.loadIcon(packageManager),
+            false,
+            forOthers = false
         )
 
         loadList.add(app)

@@ -9,5 +9,7 @@ data class AppInfoWithIcon(
     var label: String,
     var packageName: String,
     var blocked: Boolean,
-    var icon:Drawable
+    var icon:Drawable,
+    var forLinks:Boolean,
+    var forOthers:Boolean
 )

@@ -17,19 +17,32 @@ class MainRepository @Inject constructor(
         return launcherDao.insertChild(child)
     }
 
-    fun getUnblockedApps(blocked: Boolean): LiveData<List<AppInfo>> {
+    fun getUnblockedApps(
+        blocked: Boolean
+    ): LiveData<List<AppInfo>> {
         return launcherDao.getAllBlockedApps(blocked)
     }
 
+    fun getForLinksApps(
+        forLinks: Boolean
+    ): LiveData<List<AppInfo>> {
+        return launcherDao.getAllLinksApps(forLinks)
+    }
+
+    fun getForOthersApps(
+        forOthers: Boolean
+    ): LiveData<List<AppInfo>> {
+        return launcherDao.getAllLOthersApps(forOthers)
+    }
 
     fun saveAllAppsToDb(list: List<AppInfo>) {
         CoroutineScope(IO).launch {
-           launcherDao.insertAllApps(list)
+            launcherDao.insertAllApps(list)
         }
     }
 
     fun getAllApps(): LiveData<List<AppInfo>> {
-       return  launcherDao.getAllApps()
+        return launcherDao.getAllApps()
     }
 
 }

@@ -10,11 +10,16 @@
     <string name="enter_child_name">Enter User name</string>
     <string name="select_below_apps_to_add_in_block_list">1-Select below apps to add in block list \n 2- Enter User name \n 3- Tap Add Button</string>
     <string name="go_to_add_child_view">Add New User</string>
-    <string name="_1_select_below_apps_to_add_in_block_list_n_2_enter_child_name_n_3_tap_on_add_button">1-Select below apps to add in block list \n 2- Enter User name \n 3- Tap on Add Button</string>
+    <string name="add_app_decs">1-Select below apps to add in list \n 2- Enter User name \n 3- Tap on Add Button</string>
     <string name="child_added">New User Added</string>
-    <string name="added_to_block_list">\" checked to add to block list after adding user\"</string>
+    <string name="added_to_saved_list">\" Added to user list\"</string>
     <string name="back">Back</string>
-    <string name="sales_and_aftersales_applications">SALES and AFTERSALES APPLICATIONS</string>
+    <string name="sales_and_aftersales_applications">SALES and AFTER SALES APPLICATIONS</string>
+    <string name="select_for_sales_and_aftersales_applications">Select below apps for SALES and AFTER SALES </string>
     <string name="useful_links">USEFUL LINKS</string>
     <string name="others">OTHERS</string>
+    <string name="select_below_apps_for_usefull_links">Select below apps for UseFull Links</string>
+    <string name="select_below_apps_for_others_section">Select below apps for Others section</string>
+    <string name="added_for_others">added for other uses</string>
+    <string name="added_for_links">added to use full links</string>
 </resources>

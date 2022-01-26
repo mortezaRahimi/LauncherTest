@@ -22,31 +22,28 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        viewModel.parentAppWithIconList.value = loadApps(packageManager)
-
-        viewModel.getAllApps().observe(this, {
-            if (it.isEmpty()) {
-              loadApps(packageManager).apply {
-                    for (i in this) {
-                        toSaveList.add(
-                            AppInfo(
-                                i.label,
-                                i.packageName,
-                                false,
-                                i.icon.toString()
-                            )
-                        )
-                    }
-                    viewModel.saveAllApps(toSaveList)
-                    viewModel.parentAppList.value = this as List<AppInfo>
-                }
-            } else {
-                viewModel.parentAppList.value = it
+        loadApps(packageManager).let {
+            viewModel.parentAppWithIconList.value = it
+            for (i in it) {
+                toSaveList.add(
+                    AppInfo(
+                        i.label,
+                        i.packageName,
+                        false,
+                        i.icon.toString(),
+                        false,
+                        forOthers = false
+                    )
+                )
             }
-        })
-
+            viewModel.saveAllApps(toSaveList)
+            viewModel.parentAppList.value = toSaveList
+        }
     }
 
+    override fun onResume() {
+        super.onResume()
+    }
 
 
 }

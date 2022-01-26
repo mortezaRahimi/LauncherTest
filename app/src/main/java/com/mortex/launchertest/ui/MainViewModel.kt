@@ -37,8 +37,22 @@ class MainViewModel @ViewModelInject constructor(
 
     var childAppList = MutableLiveData<List<AppInfo>>(emptyList())
 
-    fun doGetUnblockedApps(): LiveData<List<AppInfo>> {
-        return mainRepository.getUnblockedApps(false)
+    fun doGetUnblockedApps(
+        blocked: Boolean
+    ): LiveData<List<AppInfo>> {
+        return mainRepository.getUnblockedApps(blocked)
+    }
+
+    fun doGetLinksApps(
+        links: Boolean
+    ): LiveData<List<AppInfo>> {
+        return mainRepository.getForLinksApps(links)
+    }
+
+    fun doGetOthersApps(
+        others: Boolean
+    ): LiveData<List<AppInfo>> {
+        return mainRepository.getForOthersApps(others)
     }
 
 

@@ -23,8 +23,21 @@ interface LauncherDao {
     @Query("SELECT * FROM app_info")
     fun getAllApps(): LiveData<List<AppInfo>>
 
-    @Query("SELECT * FROM app_info WHERE blocked = :blockedItem ")
-    fun getAllBlockedApps(blockedItem: Boolean): LiveData<List<AppInfo>>
+    @Query("SELECT * FROM app_info WHERE blocked = :blockedItem")
+    fun getAllBlockedApps(
+        blockedItem: Boolean
+    ): LiveData<List<AppInfo>>
+
+    @Query("SELECT * FROM app_info WHERE forLinks = :forLinks")
+    fun getAllLinksApps(
+        forLinks: Boolean
+    ): LiveData<List<AppInfo>>
+
+    @Query("SELECT * FROM app_info WHERE forOthers = :forOthers")
+    fun getAllLOthersApps(
+        forOthers: Boolean
+    ): LiveData<List<AppInfo>>
+
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllApps(apps: List<AppInfo>)

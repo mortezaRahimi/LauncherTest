@@ -23,6 +23,8 @@
         android:background="@android:color/darker_gray"
         android:hint="@string/enter_child_name"
         android:padding="16dp"
+        android:imeOptions="actionDone"
+        android:singleLine="true"
         android:textColor="@color/white"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -47,20 +49,81 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         android:gravity="center"
-        android:text="@string/_1_select_below_apps_to_add_in_block_list_n_2_enter_child_name_n_3_tap_on_add_button"
+        android:text="@string/add_app_decs"
         app:layout_constraintEnd_toEndOf="parent"
         android:textColor="@color/white"
         app:layout_constraintTop_toBottomOf="@+id/btn_add_child"/>
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/title1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/background_light"
+        android:text="@string/select_for_sales_and_aftersales_applications"
+        android:textColor="@color/black"
+        android:gravity="start"
+        android:padding="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        android:layout_marginTop="16dp"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/installed_app_list"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title" />
+        app:layout_constraintTop_toBottomOf="@+id/title1" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/title2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/background_light"
+        android:text="@string/select_below_apps_for_usefull_links"
+        android:padding="4dp"
+        android:textAlignment="textStart"
+        android:textColor="@color/black"
+        android:gravity="start"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/installed_app_list"
+        android:layout_marginTop="16dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/usefull_links_rv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title2" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/title3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/background_light"
+        android:text="@string/select_below_apps_for_others_section"
+        android:textAlignment="textStart"
+        android:textColor="@color/black"
+        android:gravity="start"
+        android:padding="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/usefull_links_rv"
+        android:layout_marginTop="16dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/others_rv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title3" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
