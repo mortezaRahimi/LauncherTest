@@ -22,23 +22,35 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        loadApps(packageManager).let {
-            viewModel.parentAppWithIconList.value = it
-            for (i in it) {
-                toSaveList.add(
-                    AppInfo(
-                        i.label,
-                        i.packageName,
-                        false,
-                        i.icon.toString(),
-                        false,
-                        forOthers = false
-                    )
-                )
+        viewModel.doGetUnblockedApps(false).observe(this, Observer { list ->
+            if (list.isEmpty()) {
+                loadApps(packageManager).let {
+                    viewModel.parentAppWithIconList.value = it
+
+                    for (i in it) {
+                        toSaveList.add(
+                            AppInfo(
+                                i.label,
+                                i.packageName,
+                                false,
+                                i.icon.toString(),
+                                false,
+                                forOthers = false
+                            )
+                        )
+                    }
+                    viewModel.saveAllApps(toSaveList)
+                    viewModel.parentAppList.value = toSaveList
+                }
+            } else {
+                loadApps(packageManager).let {
+                    viewModel.parentAppWithIconList.value = it
+                }
+                viewModel.parentAppList.value = list
             }
-            viewModel.saveAllApps(toSaveList)
-            viewModel.parentAppList.value = toSaveList
-        }
+        })
+
+
     }
 
     override fun onResume() {
