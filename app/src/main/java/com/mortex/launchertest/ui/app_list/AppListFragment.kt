@@ -68,6 +68,9 @@ class AppListFragment : Fragment(), AppListener {
                 isForParent = true
                 appsList.clear()
                 appsList.addAll(mainViewModel.parentAppList.value!!)
+                binding.title2.visibility = View.GONE
+                binding.title3.visibility = View.GONE
+                binding.title.text = getString(R.string.list_of_all_apps)
             }
             setupRecyclerView(appsList)
         })
@@ -86,15 +89,16 @@ class AppListFragment : Fragment(), AppListener {
 
     private fun setupRecyclerView(list: List<AppInfo>) {
         adapter = AppInfoAdapter(this@AppListFragment)
-        binding.installedAppList.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
+        binding.installedAppList.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.installedAppList.adapter = adapter
 
         var listToShow = arrayListOf<AppInfoWithIcon>()
 
-        for(i in list)
-            for(j in mainViewModel.parentAppWithIconList.value!!){
-                if(i.label == j.label){
-                    listToShow.add(AppInfoWithIcon(j.label,j.packageName,j.blocked,j.icon))
+        for (i in list)
+            for (j in mainViewModel.parentAppWithIconList.value!!) {
+                if (i.label == j.label) {
+                    listToShow.add(AppInfoWithIcon(j.label, j.packageName, j.blocked, j.icon))
                 }
             }
         adapter.setItems(listToShow)

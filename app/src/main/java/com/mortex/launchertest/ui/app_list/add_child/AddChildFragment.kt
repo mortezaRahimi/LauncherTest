@@ -90,7 +90,8 @@ class AddChildFragment : Fragment(), AppListener {
 
     private fun setupRecyclerView(list: List<AppInfo>) {
         adapter = AppInfoAdapter(this@AddChildFragment)
-        binding.installedAppList.layoutManager = LinearLayoutManager(context)
+        binding.installedAppList.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.installedAppList.adapter = adapter
 
         var listToShow = arrayListOf<AppInfoWithIcon>()
