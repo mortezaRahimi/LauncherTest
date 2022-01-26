@@ -1,10 +1,12 @@
 package com.mortex.launchertest.ui.login.ui
 
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -56,7 +58,8 @@ class LoginFragment : BaseFragment(), ChildListener {
         binding.btnLoginParent.alpha = show
 
         binding.btnLoginParent.setOnClickListener {
-            if (binding.passEt.text!!.isNotEmpty() && binding.userNameEt.text!!.isNotEmpty()) {
+            if (binding.passEt.text!!.isNotEmpty() && binding.passEt.text!!.toString() == "admin123"
+                && binding.userNameEt.text!!.isNotEmpty() && binding.userNameEt.text!!.toString() == "admin123") {
                 binding.btnLoginParent.alpha = hide
 //                login(binding.passEt.text.toString(), binding.userNameEt.text.toString())
                 goToAppListView(true)

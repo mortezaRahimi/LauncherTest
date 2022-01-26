@@ -2,11 +2,13 @@ package com.mortex.launchertest.ui.app_list
 
 import android.content.Intent
 import android.graphics.drawable.ClipDrawable.HORIZONTAL
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.lifecycleScope
@@ -99,7 +101,6 @@ class AppListFragment : Fragment(), AppListener {
                     }
                 }
             } else {
-
                 binding.btnAddChild.visibility = View.VISIBLE
                 isForParent = true
                 appsList.clear()
@@ -197,6 +198,10 @@ class AppListFragment : Fragment(), AppListener {
             }
         adapterForOthers.setItems(listOthersToShow)
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 
     override fun appTapped(app: AppInfoWithIcon) {
