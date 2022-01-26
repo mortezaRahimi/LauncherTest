@@ -44,13 +44,12 @@ class ChildViewHolder(
 
     fun bind(item: Child) {
         this.child = item
-        itemBinding.childName.text = child.name
+        itemBinding.childName.text = "Login by " + child.name
 
-        itemBinding.root.setOnClickListener{
+        itemBinding.root.setOnClickListener {
             childListener.childTapped()
         }
     }
-
 
 
 }

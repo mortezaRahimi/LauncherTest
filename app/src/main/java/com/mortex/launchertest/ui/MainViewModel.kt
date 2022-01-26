@@ -9,6 +9,10 @@ import com.mortex.launchertest.local.AppInfo
 import com.mortex.launchertest.local.AppInfoWithIcon
 import com.mortex.launchertest.local.Child
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class MainViewModel @ViewModelInject constructor(
@@ -18,8 +22,17 @@ class MainViewModel @ViewModelInject constructor(
     var parentAppList: MutableLiveData<List<AppInfo>> = MutableLiveData()
     var parentAppWithIconList: MutableLiveData<List<AppInfoWithIcon>> = MutableLiveData()
 
+    private val _userDetails = MutableStateFlow<List<Child>>(emptyList())
+    val userDetails: StateFlow<List<Child>> = _userDetails
+
 
     private val _response = MutableLiveData<Long>()
+
+    fun removeChild() {
+        viewModelScope.launch {
+            mainRepository.deleteChild()
+        }
+    }
 
     fun addUser(child: Child) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -58,6 +71,18 @@ class MainViewModel @ViewModelInject constructor(
 
     fun getAllApps(): LiveData<List<AppInfo>> {
         return mainRepository.getAllApps()
+    }
+
+    private fun doGetUserDetails() {
+        viewModelScope.launch(Dispatchers.IO) {
+            mainRepository.getUserDetails
+                .catch { e ->
+                    //Log error here
+                }
+                .collect {
+                    _userDetails.value = it
+                }
+        }
     }
 
 

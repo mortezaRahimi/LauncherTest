@@ -19,6 +19,9 @@ interface LauncherDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertChild(child: Child): Long
 
+    @Query("DELETE FROM child")
+    suspend fun removeChild()
+
 
     @Query("SELECT * FROM app_info")
     fun getAllApps(): LiveData<List<AppInfo>>

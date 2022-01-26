@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,6 +21,8 @@ import com.mortex.launchertest.local.AppInfoWithIcon
 import com.mortex.launchertest.ui.MainViewModel
 import com.mortex.launchertest.ui.login.ui.IS_PARENT
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import org.intellij.lang.annotations.JdkConstants
 
 @AndroidEntryPoint
@@ -96,6 +99,7 @@ class AppListFragment : Fragment(), AppListener {
                     }
                 }
             } else {
+
                 binding.btnAddChild.visibility = View.VISIBLE
                 isForParent = true
                 appsList.clear()

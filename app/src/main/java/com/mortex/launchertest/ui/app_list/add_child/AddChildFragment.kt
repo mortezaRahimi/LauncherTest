@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -60,8 +61,9 @@ class AddChildFragment : Fragment(), AppListener, AppListenerLinks, AppListenerO
 
     private fun addUserAndSetApps() {
         if (binding.childNameValue.text != null && binding.childNameValue.text.toString()
-                .isNotEmpty()
+                .isNotEmpty() && appsToBeUnblocked.size > 0
         ) {
+            mainViewModel.removeChild()
             mainViewModel.addUser(
                 Child(
                     Random.nextInt(),
@@ -84,7 +86,6 @@ class AddChildFragment : Fragment(), AppListener, AppListenerLinks, AppListenerO
 
             mainViewModel.saveAllApps(mainViewModel.parentAppList.value!!)
 
-            //save links and others
 
             findNavController()
                 .navigate(
@@ -92,6 +93,9 @@ class AddChildFragment : Fragment(), AppListener, AppListenerLinks, AppListenerO
                 )
             showToast(getString(R.string.child_added))
 
+        } else {
+            Toast.makeText(context, "Please add apps to at least one section", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 

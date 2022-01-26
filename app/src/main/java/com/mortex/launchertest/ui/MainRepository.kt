@@ -6,6 +6,7 @@ import com.mortex.launchertest.local.Child
 import com.mortex.launchertest.local.LauncherDao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -15,6 +16,10 @@ class MainRepository @Inject constructor(
 
     suspend fun saveChildToDb(child: Child): Long {
         return launcherDao.insertChild(child)
+    }
+
+    suspend fun deleteChild(){
+        launcherDao.removeChild()
     }
 
     fun getUnblockedApps(
@@ -44,5 +49,7 @@ class MainRepository @Inject constructor(
     fun getAllApps(): LiveData<List<AppInfo>> {
         return launcherDao.getAllApps()
     }
+
+    val getUserDetails: Flow<List<Child>> get() =  launcherDao.getAllChildren()
 
 }
