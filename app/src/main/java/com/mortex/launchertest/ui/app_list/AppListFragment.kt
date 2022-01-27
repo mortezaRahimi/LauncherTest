@@ -4,6 +4,7 @@ import android.app.admin.DevicePolicyManager
 import android.content.ComponentName
 import android.content.Intent
 import android.graphics.drawable.ClipDrawable.HORIZONTAL
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -26,6 +27,7 @@ import com.mortex.launchertest.databinding.FragmentAppListBinding
 import com.mortex.launchertest.loadApps
 import com.mortex.launchertest.local.AppInfo
 import com.mortex.launchertest.local.AppInfoWithIcon
+import com.mortex.launchertest.local.ULink
 import com.mortex.launchertest.ui.MainActivity
 import com.mortex.launchertest.ui.MainViewModel
 import com.mortex.launchertest.ui.login.ui.IS_PARENT
@@ -35,15 +37,16 @@ import kotlinx.coroutines.launch
 import org.intellij.lang.annotations.JdkConstants
 
 @AndroidEntryPoint
-class AppListFragment : Fragment(), AppListener {
+class AppListFragment : Fragment(), AppListener, LinkListener {
 
     private lateinit var adapter: AppInfoAdapter
-    private lateinit var adapterForLinks: AppInfoAdapter
     private lateinit var adapterForOthers: AppInfoAdapter
+    private lateinit var linkAdapter: LinkAdapter
+
     private lateinit var binding: FragmentAppListBinding
     var appsList: ArrayList<AppInfo> = ArrayList()
-    var appsListForLinks: ArrayList<AppInfo> = ArrayList()
     var appsListForOthers: ArrayList<AppInfo> = ArrayList()
+    var ulinks: ArrayList<ULink> = ArrayList()
 
     private var isForParent: Boolean = false
     private lateinit var mainViewModel: MainViewModel
@@ -69,44 +72,42 @@ class AppListFragment : Fragment(), AppListener {
 
             if (arguments != null && !arguments?.getBoolean(IS_PARENT)!!) {
 
+                mainViewModel.getAllLinks().observe(viewLifecycleOwner, Observer { links ->
+                    linkAdapter = LinkAdapter(this)
+                    binding.usefullLinksRv.layoutManager =
+                        LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
+                    binding.usefullLinksRv.adapter = linkAdapter
+                    linkAdapter.setItems(links)
+                })
+
+
                 requireActivity().startLockTask()
                 if (it != null) {
                     for (i in mainViewModel.childAppList.value!!) {
-                        if (!i.blocked && !i.forLinks && !i.forOthers)
+                        if (!i.blocked && !i.forOthers)
                             appsList.add(
                                 AppInfo(
                                     i.label,
                                     i.packageName,
                                     i.blocked,
                                     i.icon,
-                                    false,
                                     forOthers = false
                                 )
                             )
 
-                        if (!i.blocked && i.forOthers && !i.forLinks)
+                        if (!i.blocked && i.forOthers)
                             appsListForOthers.add(
                                 AppInfo(
                                     i.label,
                                     i.packageName,
                                     i.blocked,
                                     i.icon,
-                                    false,
                                     forOthers = true
                                 )
                             )
 
-                        if (!i.blocked && i.forLinks && !i.forOthers)
-                            appsListForLinks.add(
-                                AppInfo(
-                                    i.label,
-                                    i.packageName,
-                                    i.blocked,
-                                    i.icon,
-                                    true,
-                                    forOthers = false
-                                )
-                            )
+
                     }
                 }
             } else {
@@ -122,7 +123,6 @@ class AppListFragment : Fragment(), AppListener {
                             i.packageName,
                             i.blocked,
                             i.icon.toString(),
-                            forLinks = false,
                             forOthers = false
                         )
                     )
@@ -148,31 +148,27 @@ class AppListFragment : Fragment(), AppListener {
 
     private fun setupRecyclerView(list: List<AppInfo>) {
         adapter = AppInfoAdapter(this@AppListFragment)
-        adapterForLinks = AppInfoAdapter(this@AppListFragment)
+
         adapterForOthers = AppInfoAdapter(this@AppListFragment)
         binding.installedAppList.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-
-        binding.usefullLinksRv.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
         binding.othersRv.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
         binding.installedAppList.adapter = adapter
-        binding.usefullLinksRv.adapter = adapterForLinks
+
         binding.othersRv.adapter = adapterForOthers
 
         var listToShow = arrayListOf<AppInfoWithIcon>()
-        var listLinksToShow = arrayListOf<AppInfoWithIcon>()
         var listOthersToShow = arrayListOf<AppInfoWithIcon>()
 
         for (i in list)
             for (j in mainViewModel.parentAppWithIconList.value!!) {
-                if (i.label == j.label && !i.blocked && !i.forLinks && !i.forOthers) {
+                if (i.label == j.label && !i.blocked && !i.forOthers) {
                     listToShow.add(
                         AppInfoWithIcon(
-                            j.label, j.packageName, j.blocked, j.icon, false,
+                            j.label, j.packageName, j.blocked, j.icon,
                             forOthers = false
                         )
                     )
@@ -182,25 +178,12 @@ class AppListFragment : Fragment(), AppListener {
             }
         adapter.setItems(listToShow)
 
-        for (i in appsListForLinks)
-            for (j in mainViewModel.parentAppWithIconList.value!!) {
-                if (i.label == j.label && !i.blocked && i.forLinks && !i.forOthers) {
-                    listLinksToShow.add(
-                        AppInfoWithIcon(
-                            j.label, j.packageName, j.blocked, j.icon, true,
-                            forOthers = false
-                        )
-                    )
-                }
-            }
-        adapterForLinks.setItems(listLinksToShow)
-
         for (i in appsListForOthers)
             for (j in mainViewModel.parentAppWithIconList.value!!) {
-                if (i.label == j.label && !i.blocked && !i.forLinks && i.forOthers) {
+                if (i.label == j.label && !i.blocked && i.forOthers) {
                     listOthersToShow.add(
                         AppInfoWithIcon(
-                            j.label, j.packageName, j.blocked, j.icon, false,
+                            j.label, j.packageName, j.blocked, j.icon,
                             forOthers = true
                         )
                     )
@@ -219,6 +202,14 @@ class AppListFragment : Fragment(), AppListener {
         val launchIntent: Intent = requireActivity().packageManager
             .getLaunchIntentForPackage(app.packageName)!!
         requireActivity().startActivity(launchIntent)
+    }
+
+    override fun linkTapped(link: ULink) {
+        requireActivity().stopLockTask()
+        if (link.url.contains("http://")) {
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(link.url))
+            startActivity(browserIntent)
+        }
     }
 
 }

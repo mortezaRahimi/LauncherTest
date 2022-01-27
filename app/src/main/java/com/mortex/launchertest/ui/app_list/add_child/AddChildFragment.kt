@@ -17,17 +17,20 @@ import com.mortex.launchertest.local.Child
 import com.mortex.launchertest.ui.MainViewModel
 import com.mortex.launchertest.local.AppInfo
 import com.mortex.launchertest.local.AppInfoWithIcon
+import com.mortex.launchertest.local.ULink
 import com.mortex.launchertest.ui.app_list.*
+import dagger.hilt.android.AndroidEntryPoint
 import kotlin.random.Random
 
-
-class AddChildFragment : Fragment(), AppListener, AppListenerLinks, AppListenerOthers {
+@AndroidEntryPoint
+class AddChildFragment : Fragment(), AppListener, AppListenerOthers {
 
     private lateinit var binding: FragmentAddChildBinding
     private lateinit var mainViewModel: MainViewModel
     private lateinit var adapter: AppInfoAdapter
-    private lateinit var adapterLinks: AppInfoLinksAdapter
     private lateinit var adapterOthers: AppInfoOthersAdapter
+
+    private var uLinks: ArrayList<ULink> = ArrayList()
     var appsToBeUnblocked: ArrayList<AppInfo> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,12 +60,40 @@ class AddChildFragment : Fragment(), AppListener, AppListenerLinks, AppListenerO
 
         setupRecyclerView()
 
+
+        binding.btnAddLink.setOnClickListener {
+            if (binding.linkUrlEt.text.toString().isNotEmpty()
+                && binding.linkName.text.toString().isNotEmpty()
+            ) {
+                uLinks.add(
+                    ULink(
+                        name = binding.linkName.text.toString(),
+                        url = binding.linkUrlEt.text.toString(),
+                        id = Random.nextInt()
+                    )
+                )
+                Toast.makeText(
+                    context,
+                    binding.linkName.text.toString() + "Added to links",
+                    Toast.LENGTH_SHORT
+                ).show()
+                binding.linkName.text = null
+                binding.linkUrlEt.text = null
+            }
+        }
+
     }
 
     private fun addUserAndSetApps() {
         if (binding.childNameValue.text != null && binding.childNameValue.text.toString()
                 .isNotEmpty() && appsToBeUnblocked.size > 0
         ) {
+
+            if (uLinks.size > 0) {
+                mainViewModel.removeLinks()
+                mainViewModel.saveALLLinks(uLinks)
+            }
+
             mainViewModel.removeChild()
             mainViewModel.addUser(
                 Child(
@@ -71,14 +102,24 @@ class AddChildFragment : Fragment(), AppListener, AppListenerLinks, AppListenerO
                 )
             )
 
-            for (item in mainViewModel.parentAppList.value!!) {
-                item.blocked = true
+            var listToSave: ArrayList<AppInfo> = ArrayList()
+            for (i in loadApps(requireActivity().packageManager)) {
+                listToSave.add(
+                    AppInfo(
+                        i.label,
+                        i.packageName,
+                        true,
+                        i.icon.toString(),
+                        forOthers = false
+                    )
+                )
             }
+            mainViewModel.parentAppList.value!!.clear()
+            mainViewModel.parentAppList.value = listToSave
             for (i in appsToBeUnblocked) {
                 for (j in mainViewModel.parentAppList.value!!) {
                     if (i.label == j.label) {
                         j.blocked = false
-                        j.forLinks = i.forLinks
                         j.forOthers = i.forOthers
                     }
                 }
@@ -101,13 +142,11 @@ class AddChildFragment : Fragment(), AppListener, AppListenerLinks, AppListenerO
 
     private fun setupRecyclerView() {
         adapter = AppInfoAdapter(this@AddChildFragment)
-        adapterLinks = AppInfoLinksAdapter(this@AddChildFragment)
         adapterOthers = AppInfoOthersAdapter(this@AddChildFragment)
 
         var linearLayoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        var linearLayoutManager1 =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+
         var linearLayoutManager2 =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
@@ -116,8 +155,6 @@ class AddChildFragment : Fragment(), AppListener, AppListenerLinks, AppListenerO
         binding.installedAppList.layoutManager = linearLayoutManager
         binding.installedAppList.adapter = adapter
 
-        binding.usefullLinksRv.layoutManager = linearLayoutManager1
-        binding.usefullLinksRv.adapter = adapterLinks
 
         binding.othersRv.layoutManager = linearLayoutManager2
         binding.othersRv.adapter = adapterOthers
@@ -125,25 +162,24 @@ class AddChildFragment : Fragment(), AppListener, AppListenerLinks, AppListenerO
         for (j in loadApps(packageManager = requireActivity().packageManager)) {
             listToShow.add(
                 AppInfoWithIcon(
-                    j.label, j.packageName, j.blocked, j.icon, false,
+                    j.label, j.packageName, j.blocked, j.icon,
                     forOthers = false
                 )
             )
         }
 
         adapter.setItems(listToShow)
-        adapterLinks.setItems(listToShow)
+
         adapterOthers.setItems(listToShow)
     }
 
     override fun appTapped(app: AppInfoWithIcon) {
         app.blocked = false
 
-        optimiseList(appsToBeUnblocked, app.label)
+//        optimiseList(appsToBeUnblocked, app.label)
         appsToBeUnblocked.add(
             AppInfo(
                 app.label, app.packageName, app.blocked, "",
-                forLinks = false,
                 forOthers = false
             )
         )
@@ -152,33 +188,15 @@ class AddChildFragment : Fragment(), AppListener, AppListenerLinks, AppListenerO
 
     }
 
-    override fun appTappedForLinks(app: AppInfoWithIcon) {
-        app.blocked = false
-        app.forLinks = true
-        app.forOthers = false
-
-        optimiseList(appsToBeUnblocked, app.label)
-        appsToBeUnblocked.add(
-            AppInfo(
-                app.label, app.packageName, app.blocked, "",
-                app.forLinks,
-                app.forOthers
-            )
-        )
-
-        showToast(app.label + getString(R.string.added_for_links))
-    }
 
     override fun appTappedForOthers(app: AppInfoWithIcon) {
         app.blocked = false
         app.forOthers = true
-        app.forLinks = false
 
-        optimiseList(appsToBeUnblocked, app.label)
+//        optimiseList(appsToBeUnblocked, app.label)
         appsToBeUnblocked.add(
             AppInfo(
                 app.label, app.packageName, app.blocked, "",
-                app.forLinks,
                 app.forOthers
             )
         )

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import com.mortex.launchertest.local.AppInfo
 import com.mortex.launchertest.local.Child
 import com.mortex.launchertest.local.LauncherDao
+import com.mortex.launchertest.local.ULink
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.Flow
@@ -14,11 +15,23 @@ class MainRepository @Inject constructor(
     val launcherDao: LauncherDao
 ) {
 
+    suspend fun saveAllLinks(links: List<ULink>) {
+        launcherDao.insertAllLinks(links)
+    }
+
+    fun getAllLinks(): LiveData<List<ULink>> {
+        return launcherDao.getAllLinks()
+    }
+
+    suspend fun removeAllLinks() {
+        launcherDao.removeLinks()
+    }
+
     suspend fun saveChildToDb(child: Child): Long {
         return launcherDao.insertChild(child)
     }
 
-    suspend fun deleteChild(){
+    suspend fun deleteChild() {
         launcherDao.removeChild()
     }
 
@@ -28,11 +41,6 @@ class MainRepository @Inject constructor(
         return launcherDao.getAllBlockedApps(blocked)
     }
 
-    fun getForLinksApps(
-        forLinks: Boolean
-    ): LiveData<List<AppInfo>> {
-        return launcherDao.getAllLinksApps(forLinks)
-    }
 
     fun getForOthersApps(
         forOthers: Boolean
@@ -50,6 +58,6 @@ class MainRepository @Inject constructor(
         return launcherDao.getAllApps()
     }
 
-    val getUserDetails: Flow<List<Child>> get() =  launcherDao.getAllChildren()
+    val getUserDetails: Flow<List<Child>> get() = launcherDao.getAllChildren()
 
 }

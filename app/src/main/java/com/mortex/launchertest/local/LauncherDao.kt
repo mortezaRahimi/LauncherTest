@@ -23,6 +23,16 @@ interface LauncherDao {
     suspend fun removeChild()
 
 
+    @Query("SELECT * FROM link")
+    fun getAllLinks(): LiveData<List<ULink>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllLinks(links: List<ULink>)
+
+    @Query("DELETE FROM link")
+    suspend fun removeLinks()
+
+
     @Query("SELECT * FROM app_info")
     fun getAllApps(): LiveData<List<AppInfo>>
 
@@ -31,10 +41,6 @@ interface LauncherDao {
         blockedItem: Boolean
     ): LiveData<List<AppInfo>>
 
-    @Query("SELECT * FROM app_info WHERE forLinks = :forLinks")
-    fun getAllLinksApps(
-        forLinks: Boolean
-    ): LiveData<List<AppInfo>>
 
     @Query("SELECT * FROM app_info WHERE forOthers = :forOthers")
     fun getAllLOthersApps(

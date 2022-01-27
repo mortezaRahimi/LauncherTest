@@ -10,10 +10,22 @@
         android:id="@+id/back_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:layout_margin="4dp"
-        android:text="@string/back"/>
+        android:text="@string/back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_add_child"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/background_light"
+        android:text="@string/add_child"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/child_name_value" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/child_name_value"
@@ -22,8 +34,8 @@
         android:layout_margin="32dp"
         android:background="@android:color/darker_gray"
         android:hint="@string/enter_child_name"
-        android:padding="16dp"
         android:imeOptions="actionDone"
+        android:padding="16dp"
         android:singleLine="true"
         android:textColor="@color/white"
         android:textSize="15sp"
@@ -31,42 +43,109 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/back_btn" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_add_child"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/background_light"
-        android:text="@string/add_child"
-        android:layout_marginTop="8dp"
-        android:textColor="@color/black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/child_name_value" />
-
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
         android:gravity="center"
         android:text="@string/add_app_decs"
-        app:layout_constraintEnd_toEndOf="parent"
         android:textColor="@color/white"
-        app:layout_constraintTop_toBottomOf="@+id/btn_add_child"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_add_child" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/title1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:background="@android:color/background_light"
-        android:text="@string/select_for_sales_and_aftersales_applications"
-        android:textColor="@color/black"
         android:gravity="start"
         android:padding="4dp"
+        android:text="@string/select_for_sales_and_aftersales_applications"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title"
-        android:layout_marginTop="16dp"/>
+        app:layout_constraintTop_toBottomOf="@+id/title" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/title2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@android:color/background_light"
+        android:gravity="start"
+        android:padding="4dp"
+        android:text="Add links for user"
+        android:textAlignment="textStart"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/installed_app_list" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/title3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@android:color/background_light"
+        android:gravity="start"
+        android:padding="4dp"
+        android:text="@string/select_below_apps_for_others_section"
+        android:textAlignment="textStart"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/usefull_links_rv" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/usefull_links_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="4"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title2">
+
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/link_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:hint="Type url name"
+            android:imeOptions="actionDone"
+            android:singleLine="true"
+            android:padding="8dp"
+            android:textColor="@color/black"
+            android:textSize="13sp" />
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/link_url_et"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:background="@color/white"
+            android:imeOptions="actionDone"
+            android:singleLine="true"
+            android:hint="Type url"
+            android:padding="8dp"
+            android:textColor="@color/black"
+            android:textSize="13sp" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_add_link"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Add"
+            android:textColor="@color/black"
+            android:textSize="13sp" />
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/installed_app_list"
@@ -77,45 +156,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title1" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/title2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@android:color/background_light"
-        android:text="@string/select_below_apps_for_usefull_links"
-        android:padding="4dp"
-        android:textAlignment="textStart"
-        android:textColor="@color/black"
-        android:gravity="start"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/installed_app_list"
-        android:layout_marginTop="16dp"/>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/usefull_links_rv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title2" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/title3"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@android:color/background_light"
-        android:text="@string/select_below_apps_for_others_section"
-        android:textAlignment="textStart"
-        android:textColor="@color/black"
-        android:gravity="start"
-        android:padding="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/usefull_links_rv"
-        android:layout_marginTop="16dp"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/others_rv"

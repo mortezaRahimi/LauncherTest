@@ -10,6 +10,5 @@ data class AppInfoWithIcon(
     var packageName: String,
     var blocked: Boolean,
     var icon:Drawable,
-    var forLinks:Boolean,
     var forOthers:Boolean
 )

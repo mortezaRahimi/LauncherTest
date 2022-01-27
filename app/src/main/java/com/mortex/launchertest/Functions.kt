@@ -28,7 +28,6 @@ fun loadApps(packageManager: PackageManager): List<AppInfoWithIcon> {
             ri.activityInfo.packageName,
             false,
             ri.activityInfo.loadIcon(packageManager),
-            false,
             forOthers = false
         )
 

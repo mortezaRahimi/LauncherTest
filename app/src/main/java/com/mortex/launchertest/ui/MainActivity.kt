@@ -21,9 +21,6 @@ import android.content.ComponentName
 import android.app.admin.DevicePolicyManager
 
 
-
-
-
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -50,19 +47,18 @@ class MainActivity : AppCompatActivity() {
                                 i.packageName,
                                 false,
                                 i.icon.toString(),
-                                false,
                                 forOthers = false
                             )
                         )
                     }
-                    viewModel.saveAllApps(toSaveList)
+//                    viewModel.saveAllApps(toSaveList)
                     viewModel.parentAppList.value = toSaveList
                 }
             } else {
                 loadApps(packageManager).let {
                     viewModel.parentAppWithIconList.value = it
                 }
-                viewModel.parentAppList.value = list
+                viewModel.parentAppList.value = list as ArrayList<AppInfo>?
             }
         })
 

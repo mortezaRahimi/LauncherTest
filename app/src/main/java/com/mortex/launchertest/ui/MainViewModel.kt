@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.mortex.launchertest.local.AppInfo
 import com.mortex.launchertest.local.AppInfoWithIcon
 import com.mortex.launchertest.local.Child
+import com.mortex.launchertest.local.ULink
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,14 +20,29 @@ class MainViewModel @ViewModelInject constructor(
     private val mainRepository: MainRepository
 ) : ViewModel() {
 
-    var parentAppList: MutableLiveData<List<AppInfo>> = MutableLiveData()
+    var parentAppList: MutableLiveData<ArrayList<AppInfo>> = MutableLiveData()
     var parentAppWithIconList: MutableLiveData<List<AppInfoWithIcon>> = MutableLiveData()
 
     private val _userDetails = MutableStateFlow<List<Child>>(emptyList())
     val userDetails: StateFlow<List<Child>> = _userDetails
 
-
     private val _response = MutableLiveData<Long>()
+
+    fun removeLinks() {
+        viewModelScope.launch {
+            mainRepository.removeAllLinks()
+        }
+    }
+
+    fun getAllLinks(): LiveData<List<ULink>> {
+        return mainRepository.getAllLinks()
+    }
+
+    fun saveALLLinks(list: List<ULink>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            mainRepository.saveAllLinks(list)
+        }
+    }
 
     fun removeChild() {
         viewModelScope.launch {
@@ -40,7 +56,7 @@ class MainViewModel @ViewModelInject constructor(
         }
     }
 
-    fun saveAllApps(list: List<AppInfo>) {
+    fun saveAllApps(list: ArrayList<AppInfo>) {
 
         parentAppList.value = list
         viewModelScope.launch(Dispatchers.IO) {
@@ -54,12 +70,6 @@ class MainViewModel @ViewModelInject constructor(
         blocked: Boolean
     ): LiveData<List<AppInfo>> {
         return mainRepository.getUnblockedApps(blocked)
-    }
-
-    fun doGetLinksApps(
-        links: Boolean
-    ): LiveData<List<AppInfo>> {
-        return mainRepository.getForLinksApps(links)
     }
 
     fun doGetOthersApps(
