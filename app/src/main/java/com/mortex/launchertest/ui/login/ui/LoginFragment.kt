@@ -58,8 +58,10 @@ class LoginFragment : BaseFragment(), ChildListener {
         binding.btnLoginParent.alpha = show
 
         binding.btnLoginParent.setOnClickListener {
-            if (binding.passEt.text!!.isNotEmpty() && binding.passEt.text!!.toString() == "admin123"
-                && binding.userNameEt.text!!.isNotEmpty() && binding.userNameEt.text!!.toString() == "admin123") {
+            if (binding.passEt.text!!.isNotEmpty() //&& binding.passEt.text!!.toString() == "admin123"
+                && binding.userNameEt.text!!.isNotEmpty()
+            )// && binding.userNameEt.text!!.toString() == "admin123") {
+            {
                 binding.btnLoginParent.alpha = hide
 //                login(binding.passEt.text.toString(), binding.userNameEt.text.toString())
                 goToAppListView(true)
@@ -114,7 +116,7 @@ class LoginFragment : BaseFragment(), ChildListener {
     }
 
     override fun childTapped() {
-       goToAppListView(false)
+        goToAppListView(false)
     }
 
 

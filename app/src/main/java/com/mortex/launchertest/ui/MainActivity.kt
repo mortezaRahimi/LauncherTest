@@ -8,6 +8,21 @@ import com.mortex.launchertest.databinding.ActivityMainBinding
 import com.mortex.launchertest.loadApps
 import com.mortex.launchertest.local.AppInfo
 import dagger.hilt.android.AndroidEntryPoint
+import android.widget.Toast
+
+import android.app.ActivityManager.RunningTaskInfo
+
+import android.app.ActivityManager
+import android.content.Context
+import com.mortex.launchertest.MyDeviceAdminReceiver
+
+import android.content.ComponentName
+
+import android.app.admin.DevicePolicyManager
+
+
+
+
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -56,8 +71,24 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        requestTaskLock()
     }
 
+     fun requestTaskLock() {
+        val dpm = getSystemService(DEVICE_POLICY_SERVICE) as DevicePolicyManager
+        val deviceAdminReceiver = ComponentName(this, MyDeviceAdminReceiver::class.java)
+        if (dpm.isDeviceOwnerApp(this.packageName)) {
+            val packages = arrayOf(this.packageName)
+            dpm.setLockTaskPackages(deviceAdminReceiver, packages)
+            if (dpm.isLockTaskPermitted(this.packageName)) {
+                startLockTask()
+            } else {
+                Toast.makeText(this, "Lock screen is not permitted", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            Toast.makeText(this, "App is not a device administrator", Toast.LENGTH_SHORT).show()
+        }
+    }
 
 }
 

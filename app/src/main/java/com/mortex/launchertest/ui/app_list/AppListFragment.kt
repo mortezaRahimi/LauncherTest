@@ -1,5 +1,7 @@
 package com.mortex.launchertest.ui.app_list
 
+import android.app.admin.DevicePolicyManager
+import android.content.ComponentName
 import android.content.Intent
 import android.graphics.drawable.ClipDrawable.HORIZONTAL
 import android.os.Build
@@ -8,18 +10,23 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.mortex.launchertest.MyDeviceAdminReceiver
 import com.mortex.launchertest.R
 import com.mortex.launchertest.databinding.FragmentAppListBinding
 import com.mortex.launchertest.loadApps
 import com.mortex.launchertest.local.AppInfo
 import com.mortex.launchertest.local.AppInfoWithIcon
+import com.mortex.launchertest.ui.MainActivity
 import com.mortex.launchertest.ui.MainViewModel
 import com.mortex.launchertest.ui.login.ui.IS_PARENT
 import dagger.hilt.android.AndroidEntryPoint
@@ -61,6 +68,8 @@ class AppListFragment : Fragment(), AppListener {
             mainViewModel.childAppList.value = it
 
             if (arguments != null && !arguments?.getBoolean(IS_PARENT)!!) {
+
+                requireActivity().startLockTask()
                 if (it != null) {
                     for (i in mainViewModel.childAppList.value!!) {
                         if (!i.blocked && !i.forLinks && !i.forOthers)
@@ -101,6 +110,7 @@ class AppListFragment : Fragment(), AppListener {
                     }
                 }
             } else {
+                requireActivity().stopLockTask()
                 binding.btnAddChild.visibility = View.VISIBLE
                 isForParent = true
                 appsList.clear()
@@ -205,10 +215,10 @@ class AppListFragment : Fragment(), AppListener {
     }
 
     override fun appTapped(app: AppInfoWithIcon) {
+        requireActivity().stopLockTask()
         val launchIntent: Intent = requireActivity().packageManager
             .getLaunchIntentForPackage(app.packageName)!!
         requireActivity().startActivity(launchIntent)
     }
-
 
 }
