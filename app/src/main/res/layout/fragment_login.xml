@@ -23,6 +23,8 @@
             android:layout_height="wrap_content"
             android:hint="@string/user_name"
             android:textColor="@color/white"
+            android:singleLine="true"
+            android:maxLines="1"
             android:background="@android:color/darker_gray"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -33,6 +35,9 @@
             android:hint="@string/password"
             android:layout_marginTop="32dp"
             android:inputType="textPassword"
+            android:imeOptions="actionDone"
+            android:singleLine="true"
+            android:maxLines="1"
             android:textColor="@color/white"
             android:background="@android:color/darker_gray"
             app:layout_constraintTop_toTopOf="parent" />
