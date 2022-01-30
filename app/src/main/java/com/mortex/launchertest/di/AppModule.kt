@@ -101,8 +101,9 @@ object AppModule {
     @Singleton
     @Provides
     fun provideMainRepository(
-        launcherDao: LauncherDao
+        launcherDao: LauncherDao,
+        sessionManager: SessionManager
     ) =
-        MainRepository(launcherDao)
+        MainRepository(launcherDao,sessionManager)
 
 }

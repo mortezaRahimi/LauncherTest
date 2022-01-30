@@ -1,10 +1,7 @@
 package com.mortex.launchertest.ui
 
 import androidx.lifecycle.LiveData
-import com.mortex.launchertest.local.AppInfo
-import com.mortex.launchertest.local.Child
-import com.mortex.launchertest.local.LauncherDao
-import com.mortex.launchertest.local.ULink
+import com.mortex.launchertest.local.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.Flow
@@ -12,7 +9,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MainRepository @Inject constructor(
-    val launcherDao: LauncherDao
+    val launcherDao: LauncherDao,
+    val sessionManager: SessionManager
 ) {
 
     suspend fun saveAllLinks(links: List<ULink>) {
@@ -59,5 +57,11 @@ class MainRepository @Inject constructor(
     }
 
     val getUserDetails: Flow<List<Child>> get() = launcherDao.getAllChildren()
+
+    fun saveMachinePath(value: String) {
+        sessionManager.saveMachinePath(value)
+    }
+
+    fun getMachinePath(): String?  = sessionManager.getMachinePath()
 
 }

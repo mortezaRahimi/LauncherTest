@@ -23,6 +23,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.app.imagepickerlibrary.ImagePickerActivityClass
+import com.app.imagepickerlibrary.ImagePickerBottomsheet
+import com.app.imagepickerlibrary.loadImage
 import com.mortex.launchertest.MyDeviceAdminReceiver
 import com.mortex.launchertest.R
 import com.mortex.launchertest.databinding.FragmentAppListBinding
@@ -34,12 +37,20 @@ import com.mortex.launchertest.ui.MainActivity
 import com.mortex.launchertest.ui.MainViewModel
 import com.mortex.launchertest.ui.login.ui.IS_PARENT
 import dagger.hilt.android.AndroidEntryPoint
+import id.zelory.compressor.Compressor
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.intellij.lang.annotations.JdkConstants
+import java.io.File
+import android.graphics.BitmapFactory
+
+import android.graphics.Bitmap
+
 
 @AndroidEntryPoint
-class AppListFragment : Fragment(), AppListener, LinkListener {
+class AppListFragment : Fragment(), AppListener, LinkListener,
+    ImagePickerBottomsheet.ItemClickListener,
+    ImagePickerActivityClass.OnResult {
 
     private lateinit var adapter: AppInfoAdapter
     private lateinit var adapterForOthers: AppInfoAdapter
@@ -49,6 +60,14 @@ class AppListFragment : Fragment(), AppListener, LinkListener {
     var appsList: ArrayList<AppInfo> = ArrayList()
     var appsListForOthers: ArrayList<AppInfo> = ArrayList()
     var ulinks: ArrayList<ULink> = ArrayList()
+    private val imagePicker: ImagePickerActivityClass by lazy {
+        ImagePickerActivityClass(
+            requireContext(),
+            this,
+            requireActivity().activityResultRegistry,
+            fragment = this
+        )
+    }
 
     private var isForParent: Boolean = false
     private lateinit var mainViewModel: MainViewModel
@@ -69,9 +88,27 @@ class AppListFragment : Fragment(), AppListener, LinkListener {
         super.onViewCreated(view, savedInstanceState)
         mainViewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel::class.java)
 
-        binding.machine.setImageDrawable(ContextCompat.getDrawable(requireContext(),
-            R.drawable.ic_mvm_small
-        ))
+        imagePicker.cropOptions(true)
+
+
+        if (mainViewModel.getMachinePath() != null) {
+
+            val bmImg = BitmapFactory.decodeFile(mainViewModel.getMachinePath())
+            binding.machine.setImageBitmap(bmImg)
+        } else {
+
+            binding.machine.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.ic_mvm_small
+                )
+            )
+        }
+
+        binding.machine.setOnClickListener {
+            requireActivity().stopLockTask()
+            imagePicker.choosePhotoFromGallery()
+        }
 
 
         mainViewModel.doGetUnblockedApps(blocked = false).observe(viewLifecycleOwner, Observer {
@@ -217,6 +254,42 @@ class AppListFragment : Fragment(), AppListener, LinkListener {
             val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(link.url))
             startActivity(browserIntent)
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        imagePicker.onActivityResult(requestCode, resultCode, data)
+        requireActivity().startLockTask()
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        imagePicker.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    override fun returnString(item: Uri?) {
+        binding.machine.loadImage(item, false) {
+            compressAndSaveImagePath(File(item!!.path!!))
+        }
+    }
+
+    private fun compressAndSaveImagePath(actualImage: File) {
+        actualImage.let { imageFile ->
+            lifecycleScope.launch {
+                // Default compression
+                var compressedImage = Compressor.compress(requireActivity(), imageFile)
+                mainViewModel.saveMachinePath(compressedImage.path)
+            }
+        }
+    }
+
+
+    override fun onItemClick(item: String?) {
+
     }
 
 }

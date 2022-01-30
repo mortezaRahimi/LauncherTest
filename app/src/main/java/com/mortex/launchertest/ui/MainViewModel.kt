@@ -95,5 +95,11 @@ class MainViewModel @ViewModelInject constructor(
         }
     }
 
+    fun getMachinePath(): String? = mainRepository.getMachinePath()
+
+    fun saveMachinePath(value:String){
+        mainRepository.saveMachinePath(value)
+    }
+
 
 }
