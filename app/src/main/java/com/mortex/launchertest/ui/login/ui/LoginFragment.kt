@@ -29,6 +29,9 @@ import kotlin.collections.ArrayList
 
 const val IS_PARENT = "IS_PARENT"
 
+const val PASSWORD = "TOPtec@1400_8585#"
+const val USER = "toptec"
+
 @AndroidEntryPoint
 class LoginFragment : BaseFragment(), ChildListener {
     private var children: ArrayList<Child> = ArrayList()
@@ -58,8 +61,8 @@ class LoginFragment : BaseFragment(), ChildListener {
         binding.btnLoginParent.alpha = show
 
         binding.btnLoginParent.setOnClickListener {
-            if (binding.passEt.text!!.isNotEmpty() && binding.passEt.text!!.toString() == "a" //"TOPtec@1400_8585#"
-                && binding.userNameEt.text!!.isNotEmpty() && binding.userNameEt.text!!.toString() =="a" // "toptec"
+            if (binding.passEt.text!!.isNotEmpty() && binding.passEt.text!!.toString() == PASSWORD
+                && binding.userNameEt.text!!.isNotEmpty() && binding.userNameEt.text!!.toString() == USER
             ) {
                 binding.btnLoginParent.alpha = hide
 //                login(binding.passEt.text.toString(), binding.userNameEt.text.toString())
