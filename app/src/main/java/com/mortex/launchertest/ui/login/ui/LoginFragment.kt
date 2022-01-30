@@ -58,8 +58,8 @@ class LoginFragment : BaseFragment(), ChildListener {
         binding.btnLoginParent.alpha = show
 
         binding.btnLoginParent.setOnClickListener {
-            if (binding.passEt.text!!.isNotEmpty() && binding.passEt.text!!.toString() == "TOPtec@1400_8585#"
-                && binding.userNameEt.text!!.isNotEmpty() && binding.userNameEt.text!!.toString() == "toptec"
+            if (binding.passEt.text!!.isNotEmpty() && binding.passEt.text!!.toString() == "a" //"TOPtec@1400_8585#"
+                && binding.userNameEt.text!!.isNotEmpty() && binding.userNameEt.text!!.toString() =="a" // "toptec"
             ) {
                 binding.btnLoginParent.alpha = hide
 //                login(binding.passEt.text.toString(), binding.userNameEt.text.toString())

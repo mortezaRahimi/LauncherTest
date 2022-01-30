@@ -14,11 +14,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mortex.launchertest.MyDeviceAdminReceiver
@@ -67,6 +69,11 @@ class AppListFragment : Fragment(), AppListener, LinkListener {
         super.onViewCreated(view, savedInstanceState)
         mainViewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel::class.java)
 
+        binding.machine.setImageDrawable(ContextCompat.getDrawable(requireContext(),
+            R.drawable.ic_mvm_small
+        ))
+
+
         mainViewModel.doGetUnblockedApps(blocked = false).observe(viewLifecycleOwner, Observer {
             mainViewModel.childAppList.value = it
 
@@ -75,7 +82,7 @@ class AppListFragment : Fragment(), AppListener, LinkListener {
                 mainViewModel.getAllLinks().observe(viewLifecycleOwner, Observer { links ->
                     linkAdapter = LinkAdapter(this)
                     binding.usefullLinksRv.layoutManager =
-                        LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                        LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
                     binding.usefullLinksRv.adapter = linkAdapter
                     linkAdapter.setItems(links)
@@ -151,10 +158,10 @@ class AppListFragment : Fragment(), AppListener, LinkListener {
 
         adapterForOthers = AppInfoAdapter(this@AppListFragment)
         binding.installedAppList.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            GridLayoutManager(context, 7)
 
         binding.othersRv.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            GridLayoutManager(context, 7)
 
         binding.installedAppList.adapter = adapter
 
