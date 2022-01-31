@@ -1,8 +1,11 @@
 package com.mortex.launchertest.ui.app_list
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
+import com.mortex.launchertest.R
 import com.mortex.launchertest.databinding.AppItemBinding
 import com.mortex.launchertest.databinding.LinkItemBinding
 import com.mortex.launchertest.local.AppInfo
@@ -43,8 +46,33 @@ class LinkViewHolder(
         this.link = item
         itemBinding.btnLinkName.text = item.name
 
+            when {
+                link.url.contains("ebuy.mvmco.ir") ->   itemBinding.linkImage.setImageDrawable(
+                    AppCompatResources.getDrawable(
+                        itemBinding.btnLinkName.context,
+                        R.drawable.ic_ebuy
+                    )
+                )
 
-        itemBinding.btnLinkName.setOnClickListener {
+                link.url.contains("fownix.ir") ->   itemBinding.linkImage.setImageDrawable(
+                    AppCompatResources.getDrawable(
+                        itemBinding.btnLinkName.context,
+                        R.drawable.ic_fownix
+                    )
+                )
+
+                link.url.contains("mvmco.ir") ->   itemBinding.linkImage.setImageDrawable(
+                    AppCompatResources.getDrawable(
+                        itemBinding.btnLinkName.context,
+                        R.drawable.ic_mvm
+                    )
+                )
+
+                else -> itemBinding.linkImage.visibility = View.GONE
+            }
+
+
+        itemBinding.root.setOnClickListener {
             linkListener.linkTapped(item)
         }
 

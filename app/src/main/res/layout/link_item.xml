@@ -2,14 +2,20 @@
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:gravity="center|center_horizontal"
+    android:layout_margin="4dp"
+    android:orientation="vertical">
 
-    <androidx.appcompat.widget.AppCompatButton
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/link_image"
+        android:layout_width="75dp"
+        android:layout_height="75dp"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/btn_link_name"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textColor="@color/black"
-        android:textSize="13sp" />
+        android:textColor="@color/gold"
+        android:textSize="14sp" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>
