@@ -46,6 +46,11 @@ class AddChildFragment : Fragment(), AppListener, AppListenerOthers {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        requireActivity().stopLockTask()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mainViewModel = ViewModelProviders.of(requireActivity()).get(MainViewModel::class.java)

@@ -259,7 +259,14 @@ class AppListFragment : Fragment(), AppListener, LinkListener,
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         imagePicker.onActivityResult(requestCode, resultCode, data)
-        requireActivity().startLockTask()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!isForParent)
+            requireActivity().startLockTask()
+        else
+            requireActivity().stopLockTask()
     }
 
     override fun onRequestPermissionsResult(

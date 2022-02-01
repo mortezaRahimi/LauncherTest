@@ -74,6 +74,11 @@ class LoginFragment : BaseFragment(), ChildListener {
         getSndShowChildren()
     }
 
+    override fun onResume() {
+        super.onResume()
+        requireActivity().startLockTask()
+    }
+
     private fun login(pass: String, userName: String) {
         viewModel.login(userName, pass).observe(viewLifecycleOwner, Observer {
             when (it.status) {

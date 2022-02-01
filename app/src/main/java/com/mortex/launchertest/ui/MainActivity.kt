@@ -62,12 +62,12 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+        requestTaskLock()
 
     }
 
     override fun onResume() {
         super.onResume()
-        requestTaskLock()
     }
 
      fun requestTaskLock() {
